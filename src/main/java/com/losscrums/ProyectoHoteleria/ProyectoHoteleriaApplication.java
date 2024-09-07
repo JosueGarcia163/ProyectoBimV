@@ -1,4 +1,4 @@
-package com.proyectobimv.ProyectoHoteleria;
+package com.losscrums.ProyectoHoteleria;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
