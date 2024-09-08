@@ -1,5 +1,5 @@
 package com.losscrums.ProyectoHoteleria.model;
 
-public class Hotel {
+public class Habitacion {
 
 }
