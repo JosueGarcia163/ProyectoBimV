@@ -18,12 +18,12 @@ public class Habitacion {
     private Long id;
 
 
-    private String room;
+    private String roomType;
     @NotBlank
-    private String capacidad;
+    private String capacity;
     @NotBlank
-    private Boolean disponibilidad;
+    private Boolean availability;
     
     @NotBlank
-    private Date fechaDisponibilidad;
+    private Date availabilityDate;
 }
