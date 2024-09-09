@@ -1,7 +1,6 @@
 package com.losscrums.ProyectoHoteleria.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,13 +16,13 @@ public class HabitacionService implements IHabitacionService {
     private HabitacionRepository habitacionRepository;
 
     @Override
-    public List<Habitacion> getAllRooms() {
+    public List<Habitacion> listRoom() {
         return habitacionRepository.findAll();
     }
 
     @Override
-    public Optional<Habitacion> getRoomById(Long id) {
-        return habitacionRepository.findById(id);
+    public Habitacion findRoom(Long id) {
+        return habitacionRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -36,18 +35,5 @@ public class HabitacionService implements IHabitacionService {
         habitacionRepository.deleteById(id);
     }
 
-    @Override
-    public List<Habitacion> findByRoomType(String roomType) {
-        return habitacionRepository.findByRoomType(roomType);
-    }
-
-    @Override
-    public List<Habitacion> findAvailable(Boolean availability) {
-        return habitacionRepository.findByAvailability(availability);
-    }
-
-    @Override
-    public List<Habitacion> findByCapacity(String capacity) {
-        return habitacionRepository.findByCapacity(capacity);
-    }
+  
 }
