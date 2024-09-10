@@ -1,5 +1,9 @@
 package com.losscrums.ProyectoHoteleria.repository;
 
-public class HotelRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.losscrums.ProyectoHoteleria.model.Hotel;
+
+public interface  HotelRepository extends JpaRepository<Hotel, Long>{
 
 }
