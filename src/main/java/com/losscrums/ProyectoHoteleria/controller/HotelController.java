@@ -142,9 +142,61 @@ public class HotelController {
         }
     }
 
-    
+    @PutMapping("/put/hotel/{id}")
+    public ResponseEntity<?> editHotel(
+            @PathVariable long id,
+            @RequestPart("profilePicture") MultipartFile profilePicture,
+            @Valid @ModelAttribute HotelDTO hotel,
+            BindingResult result
+    ) {
 
+        Map<String, Object> res = new HashMap<>();
+        if (result.hasErrors()) {
+            List<String> errors = result.getFieldErrors()
+                    .stream()
+                    .map(error -> error.getDefaultMessage())
+                    .collect(Collectors.toList());
+            res.put("message", "Error en las validaciones. Por favor ingresa todos los campos.");
+            res.put("Errors", errors);
+            return ResponseEntity.badRequest().body(res);
+        }
 
+        try {
+            // Busca el hotel existente en la base de datos por su ID
+            Hotel existingHotel = hotelService.findHotel(id);
+            if (existingHotel == null) {
+                res.put("message", "No se encontró el hotel con el ID proporcionado.");
+                return ResponseEntity.internalServerError().body(res);
+            }
 
+            // Sube una nueva imagen si se le agrega.
+            String img;
+            if (!profilePicture.isEmpty()) {
+                Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(profilePicture, "profilesHotel");
+                img = uploadResult.get("url").toString();
+            } else {
+                // Mantiene la imagen existente si no se le sube otra.
+                img = existingHotel.getProfilePicture();
+            }
+
+            // Actualiza los datos del hotel con los valores nuevos del DTO
+            existingHotel.setName(hotel.getName());
+            existingHotel.setAddress(hotel.getAddress());
+            existingHotel.setNumStars(hotel.getNumStars());
+            existingHotel.setComfort(hotel.getComfort());
+            existingHotel.setProfilePicture(img);
+
+            // Se guardan los cambios en el hotelService
+            hotelService.saveHotel(existingHotel);
+
+            res.put("message", "Hotel actualizado correctamente.");
+            return ResponseEntity.ok(res);
+
+        } catch (Exception err) {
+            res.put("Message", "Error general al obtener datos.");
+            res.put("Error", err.getMessage());
+            return ResponseEntity.internalServerError().body(res);
+        }
+    }
 
 }
