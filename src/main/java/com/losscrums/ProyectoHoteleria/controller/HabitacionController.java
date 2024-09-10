@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -100,6 +101,40 @@ public class HabitacionController {
             return ResponseEntity.status(503).body(res);
         } catch (Exception err) {
             res.put("Message", "Error general al obtener datos.");
+            res.put("Error", err.getMessage());
+            return ResponseEntity.internalServerError().body(res);
+        }
+    }
+
+    @PutMapping("/put/habitacion/{id}")
+    public ResponseEntity<?> editRoom(
+            @PathVariable long id,
+            @Valid @ModelAttribute HabitacionDTO habitacion,
+            BindingResult result
+    ) {
+        Map<String, Object> res = new HashMap<>();
+        if (result.hasErrors()) {
+            List<String> errors = result.getFieldErrors().stream().
+            map(error -> error.getDefaultMessage()).collect(Collectors.toList());
+            res.put("message", "Error en las validaciones, por favor ingresa todos los campos.");
+            res.put("Errors", errors);
+            return ResponseEntity.badRequest().body(res);
+        }
+        try {
+            Habitacion existingHabitacion = habitacionService.findRoom(id);
+            if (existingHabitacion == null) {
+                res.put("message", "No se pudo encontrar la habitacion con la identicacion proporcionada");
+                return ResponseEntity.internalServerError().body(res);
+            }
+            existingHabitacion.setRoomType(habitacion.getRoomType());
+            existingHabitacion.setCapacity(habitacion.getCapacity());
+            existingHabitacion.setAvailability(habitacion.getAvailability());
+            existingHabitacion.setAvailabilityDate(habitacion.getAvailabilityDate());
+            habitacionService.saveRoom(existingHabitacion);
+            res.put("message", "Habitacion ha sido actualizada correctamente");
+            return ResponseEntity.ok(res);
+        } catch (Exception err) {
+            res.put("Message", "Error general al obtener datos");
             res.put("Error", err.getMessage());
             return ResponseEntity.internalServerError().body(res);
         }
