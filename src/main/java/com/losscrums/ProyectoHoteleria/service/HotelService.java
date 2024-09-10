@@ -16,7 +16,7 @@ public class HotelService implements IHotelService {
     private HotelRepository hotelRepository;
 
     @Override
-    public List<Hotel> listHoteles() {
+    public List<Hotel> listHotel() {
         return hotelRepository.findAll();
     }
 

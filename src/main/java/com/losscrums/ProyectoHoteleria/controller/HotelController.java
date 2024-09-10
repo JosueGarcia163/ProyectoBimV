@@ -7,9 +7,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,13 +46,13 @@ public class HotelController {
      * @return ResponseEntity con las diferentes 
      */
     @GetMapping("/list/hotel")
-    public ResponseEntity<?> getMethodUser() {
+    public ResponseEntity<?> listHotel() {
         Map<String, Object> res = new HashMap<>();
 
         // Inyeccion de dependencia del servicio
         try {
 
-            return ResponseEntity.ok().body(hotelService.listHoteles());
+            return ResponseEntity.ok().body(hotelService.listHotel());
 
             // Capturar posibles errores.
         } catch (CannotCreateTransactionException err) {
@@ -72,7 +74,7 @@ public class HotelController {
     }
 
     @GetMapping("/find/hotel/{id}")
-    public ResponseEntity<?> getMethodUserId(@PathVariable long id) {
+    public ResponseEntity<?> getHotel(@PathVariable long id) {
         Map<String, Object> res = new HashMap<>();
 
         // Inyeccion de dependencia del servicio
@@ -196,6 +198,28 @@ public class HotelController {
             res.put("Message", "Error general al obtener datos.");
             res.put("Error", err.getMessage());
             return ResponseEntity.internalServerError().body(res);
+        }
+    }
+
+    @DeleteMapping("/delete/hotel/{id}")
+    public ResponseEntity<Map<String, Object>> deleteHotel(@PathVariable long id) {
+
+        Map<String, Object> res = new HashMap<>();
+        try {
+            Hotel hotel = hotelService.findHotel(id);
+            if (hotel == null) {
+                res.put("message", "No se encontró el hotel con el ID especificado.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+            }
+            hotelService.deleteHotel(hotel);
+            res.put("message", "Hotel eliminado correctamente.");
+            res.put("success", true);
+            return ResponseEntity.ok(res);
+        } catch (Exception e) {
+            res.put("message", "Error al intentar eliminar el hotel.");
+            res.put("error", e.getMessage());
+            res.put("success", false);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
         }
     }
 

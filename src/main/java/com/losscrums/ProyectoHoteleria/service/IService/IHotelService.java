@@ -9,7 +9,7 @@ public interface IHotelService {
 
 
     // Método para listar todos los hoteles
-    public List<Hotel> listHoteles();
+    public List<Hotel> listHotel();
     
     // Método para buscar un hotel por su ID
     public Hotel findHotel(Long id);
