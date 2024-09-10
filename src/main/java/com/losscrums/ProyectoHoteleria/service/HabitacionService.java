@@ -32,7 +32,7 @@ public class HabitacionService implements IHabitacionService {
 
     @Override
     public void deleteRoom(Habitacion habitacion) {
-        habitacionRepository.deleteById(id);
+        habitacionRepository.delete(habitacion);
     }
 
   
