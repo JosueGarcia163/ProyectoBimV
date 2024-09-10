@@ -31,7 +31,7 @@ public class HabitacionService implements IHabitacionService {
     }
 
     @Override
-    public void deleteRoom(Long id) {
+    public void deleteRoom(Habitacion habitacion) {
         habitacionRepository.deleteById(id);
     }
 
