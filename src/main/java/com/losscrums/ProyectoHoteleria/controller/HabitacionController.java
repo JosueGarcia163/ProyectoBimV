@@ -12,6 +12,7 @@ import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ import com.losscrums.ProyectoHoteleria.model.Habitacion;
 import com.losscrums.ProyectoHoteleria.service.HabitacionService;
 
 import jakarta.validation.Valid;
+
 
 
 @RestController
@@ -81,4 +83,26 @@ public class HabitacionController {
             return ResponseEntity.internalServerError().body(res);
         }
     }
+
+    @GetMapping("/list/habitacion/{id}")
+    public ResponseEntity<?> getMethodRoomId(@PathVariable long id) {
+        Map<String, Object> res = new HashMap<>();
+        try{
+            Habitacion habitacion = habitacionService.findRoom(id);
+            return ResponseEntity.ok().body(habitacion);
+        } catch (CannotCreateTransactionException err) {
+            res.put("Message", "Error al momento de conectarse a la db");
+            res.put("Error", err.getMessage().concat(err.getMostSpecificCause().getMessage()));
+            return ResponseEntity.status(503).body(res);    
+        } catch (DataAccessException err) {
+            res.put("Message", "Error al momento de consultar a la db");
+            res.put("Error", err.getMessage().concat(err.getMostSpecificCause().getMessage()));
+            return ResponseEntity.status(503).body(res);
+        } catch (Exception err) {
+            res.put("Message", "Error general al obtener datos.");
+            res.put("Error", err.getMessage());
+            return ResponseEntity.internalServerError().body(res);
+        }
+    }
+
 }
