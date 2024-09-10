@@ -12,7 +12,7 @@ public interface IHabitacionService {
 
     Habitacion saveRoom(Habitacion habitacion);
 
-    public void deleteRoom(Long id);
+    public void deleteRoom(Habitacion habitacion);
 
     //List<Habitacion> findByRoomType(String roomType);
 

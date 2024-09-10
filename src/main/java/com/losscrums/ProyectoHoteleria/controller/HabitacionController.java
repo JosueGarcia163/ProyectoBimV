@@ -7,9 +7,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -140,4 +142,25 @@ public class HabitacionController {
         }
     }
 
+    @DeleteMapping("/delete/habitacion/{id}")
+    public ResponseEntity<Map<String, Object>> deleteRoom(
+            @PathVariable long id){
+        Map<String, Object> res = new HashMap<>();
+        try{
+            Habitacion habitacion = habitacionService.findRoom(id);
+            if(habitacion == null){
+                res.put("message", "No se encontro la habitacion con la identificacion proporcionada");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+            }
+            habitacionService.deleteRoom(habitacion);
+            res.put("message", "Habitacion eliminada correctamente");
+            res.put("success", true);
+            return ResponseEntity.ok(res);
+        } catch (Exception e) {
+            res.put("message", "Error al intentar eliminar la habitacion");
+            res.put("error", e.getMessage());
+            res.put("success", false);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+        }
+    }
 }
