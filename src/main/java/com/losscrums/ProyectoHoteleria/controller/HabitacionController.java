@@ -128,10 +128,18 @@ public class HabitacionController {
         }
     }
 
+    // Creamos el metodo de editar habitacion
     @PutMapping("/put/habitacion/{id}")
+    // Utilizamos la clase reponseEntity el cual espara un valor de repuesta
     public ResponseEntity<?> editRoom(
+            //Esperamos que se nos otorgue la id con el que vamos a editar
             @PathVariable long id,
+            /*Se ejecutan las validaciones que definimos en HabitacionDTO, con  la anotacion @ModelAttribute 
+            indicamos que el parametro habitacion debe ser enlazado con los datos del formulario en la 
+            solicitud del multipart */            
             @Valid @ModelAttribute HabitacionDTO habitacion,
+            /* Es una interfaz que se usa para capturar y manejar los errores de validación que pueden ocurrir 
+            durante el proceso de enlace de datos */
             BindingResult result
     ) {
         Map<String, Object> res = new HashMap<>();
@@ -143,15 +151,19 @@ public class HabitacionController {
             return ResponseEntity.badRequest().body(res);
         }
         try {
+            // Busca la habitacion existente en la bd por su id
             Habitacion existingHabitacion = habitacionService.findRoom(id);
             if (existingHabitacion == null) {
                 res.put("message", "No se pudo encontrar la habitacion con la identicacion proporcionada");
                 return ResponseEntity.internalServerError().body(res);
             }
+            // Actualiza los datos de la habitacion con los valores nuevos del bean DTO
+            // de habitacion
             existingHabitacion.setRoomType(habitacion.getRoomType());
             existingHabitacion.setCapacity(habitacion.getCapacity());
             existingHabitacion.setAvailability(habitacion.getAvailability());
             existingHabitacion.setAvailabilityDate(habitacion.getAvailabilityDate());
+            // Se guarda los cambios en el servicio den habitacion
             habitacionService.saveRoom(existingHabitacion);
             res.put("message", "Habitacion ha sido actualizada correctamente");
             return ResponseEntity.ok(res);
@@ -162,21 +174,32 @@ public class HabitacionController {
         }
     }
 
+    //Se cera el metodo de eliminar habitacion
     @DeleteMapping("/delete/habitacion/{id}")
+    // Se utiliza la clase responseEntity con la clase hashMap para devolver un String
+    // y un Object
     public ResponseEntity<Map<String, Object>> deleteRoom(
-            @PathVariable long id){
+        // se espera el id para que se pueda buscar la habitacion que se va a eliminar    
+        @PathVariable long id){
         Map<String, Object> res = new HashMap<>();
         try{
+            //Buscamos el id de la habitacion que se va eliminar
             Habitacion habitacion = habitacionService.findRoom(id);
+            //Creamos un if para validar si se encuentra el id
             if(habitacion == null){
+                //Modificamos el Map de res para que nos muestre este mensaje junto aun error del
+                //protocolo HTTP
                 res.put("message", "No se encontro la habitacion con la identificacion proporcionada");
+                //El responseEntity retorna un HTTP no encontrado
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
             }
+            //Eliminamos la habitacion que se solicito
             habitacionService.deleteRoom(habitacion);
             res.put("message", "Habitacion eliminada correctamente");
             res.put("success", true);
             return ResponseEntity.ok(res);
         } catch (Exception e) {
+            //Utilizamos la expecion para ubicar que error hubo a la hora de eliminar
             res.put("message", "Error al intentar eliminar la habitacion");
             res.put("error", e.getMessage());
             res.put("success", false);
