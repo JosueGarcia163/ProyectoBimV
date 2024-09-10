@@ -28,18 +28,26 @@ import jakarta.validation.Valid;
 
 
 
-@RestController
-@RequestMapping("/hoteleria/v1")    
+@RestController // esta anotacion implementa @Controller @ResponseBody
+@RequestMapping("/hoteleria/v1") //Esta es la ruta general del controlador
 public class HabitacionController {
 
     @Autowired
     HabitacionService habitacionService;
 
+    // Rutas especificas para cada fumcion del programa
+
+    /*
+     * Metodo de para listar las habitaciones
+     * @return ResponseEntity
+     */
     @GetMapping("/list/habitacion")
     public ResponseEntity<?> getMethodName() {
         Map<String, Object> res = new HashMap<>();
+        // Se inyecta la dependencia del servicio de habitaciones
         try{
             return ResponseEntity.ok().body(habitacionService.listRoom());
+        // Aqui se captura los posibles errores
         } catch (CannotCreateTransactionException err) {
             res.put("Message", "Error al momento de conectarse a la db");
             res.put("Error", err.getMessage().concat(err.getMostSpecificCause().getMessage()));
@@ -57,18 +65,28 @@ public class HabitacionController {
 
     @PostMapping("/post/habitacion")
     public ResponseEntity<?> addHabitacion(
+        /* multipart-formadata
+        La anotacion @Valid ejecuta las validaciones del bean de DTO
+        RequestBody para el JSON 
+        ModelAttribute para los archivos tambien */
         @Valid @ModelAttribute HabitacionDTO habitacion,
+        //BindingResult hace la captura de los errores si en tal no pasa las validaciones
         BindingResult result
     ){
         Map<String, Object> res = new HashMap<>();
+        //La verificacion si hay errores de validaciones del result
         if(result.hasErrors()){
+            //Obtiene una lista de todos los errores de campo del BindingResult
             List<String> erros = result.getFieldErrors().stream().
+            //Almacena todos los mensajes de error de la lista
             map(error -> error.getDefaultMessage()).collect(Collectors.toList());
             res.put("message", "Error con las validaciones, por favor ingresa todos los campos");
             res.put("Errors", erros);
+            //HTTP con el estado 400 (Bad Request)
             return ResponseEntity.badRequest().body(res);
         }
         try {
+            //utilizamos los atributos del bean DTO de habitaciones
             Long id = null;
             Habitacion newHabitacion = new Habitacion(
                 id,
@@ -90,9 +108,11 @@ public class HabitacionController {
     @GetMapping("/list/habitacion/{id}")
     public ResponseEntity<?> getMethodRoomId(@PathVariable long id) {
         Map<String, Object> res = new HashMap<>();
+        // La inyeccion de la depencia del servicio de habitaciones
         try{
             Habitacion habitacion = habitacionService.findRoom(id);
             return ResponseEntity.ok().body(habitacion);
+        // Aqui capturas posibles errores
         } catch (CannotCreateTransactionException err) {
             res.put("Message", "Error al momento de conectarse a la db");
             res.put("Error", err.getMessage().concat(err.getMostSpecificCause().getMessage()));
