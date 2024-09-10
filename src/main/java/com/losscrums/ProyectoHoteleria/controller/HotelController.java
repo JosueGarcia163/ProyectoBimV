@@ -113,12 +113,17 @@ public class HotelController {
     ) {
 
         Map<String, Object> res = new HashMap<>();
+        //Verifica si hay errores de validacion de result.
         if (result.hasErrors()) {
+            //Obtenemos una lista de todos los errores de campo del BindingResult
             List<String> errors = result.getFieldErrors().
+            //Se crea un flujo de stream a partir de la lista de errores.
                     stream().map(error -> error.getDefaultMessage()).
+                    //Recolecta todos los mensajes de error de la lista.
                     collect(Collectors.toList());
             res.put("message", "Error en las validaciones porfavor ingresa en todos los campos.");
             res.put("Errors", errors);
+            //HTTP con el estado 400 (Bad Request)
             return ResponseEntity.badRequest().body(res);
         }
 
@@ -144,11 +149,24 @@ public class HotelController {
         }
     }
 
+    //Creamos el metodo de editar hotel
     @PutMapping("/put/hotel/{id}")
+    //Utilizamos la clase reponseEntity el cual espera un valor.
     public ResponseEntity<?> editHotel(
+            //Esperamos la id para buscar el que vamos a editar
             @PathVariable long id,
+            /*Decimos que profilePicture va a ser parte de la solicitud del MultipartFile
+             * el cual utiliza la interfaz de MultipartFile para manejar una imagen
+             * la cual esta esperando el RequestPart
+             */
             @RequestPart("profilePicture") MultipartFile profilePicture,
+            /*Se ejecutan las validaciones que definimos en HotelDTO, con ModelAttribute indicamos que el parametro hotel
+             * debe ser enlazado con los datos del formulario en la solicitud del multipart.
+             * 
+             */
             @Valid @ModelAttribute HotelDTO hotel,
+            /* Es una interfaz que se usa para capturar y manejar los errores de validación que pueden ocurrir 
+            durante el proceso de enlace de datos.  */
             BindingResult result
     ) {
 
@@ -201,21 +219,32 @@ public class HotelController {
         }
     }
 
+    //Se crea el metodo de eliminar hotel.
     @DeleteMapping("/delete/hotel/{id}")
-    public ResponseEntity<Map<String, Object>> deleteHotel(@PathVariable long id) {
+    // Se utiliza la clase response entity con la clase Hash map para devolver un String y un objeto.
+    public ResponseEntity<Map<String, Object>> deleteHotel(
+            // Se espera el id para que se pueda buscar el que se va a eliminar.    
+            @PathVariable long id) {
 
+        // se crea el hashMap que vamos a utilizar.
         Map<String, Object> res = new HashMap<>();
         try {
+            //Buscamos el id que vamos a eliminar
             Hotel hotel = hotelService.findHotel(id);
+            //Creamos la validacion que verifique si encontro el id.
             if (hotel == null) {
+                //Modificamos el res para que nos muestre este mensaje junto a un error Http 
                 res.put("message", "No se encontró el hotel con el ID especificado.");
+                // El response entity retorna un Http no encontrado.
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
             }
+            //Eliminamos el hotel que encontramos
             hotelService.deleteHotel(hotel);
             res.put("message", "Hotel eliminado correctamente.");
             res.put("success", true);
             return ResponseEntity.ok(res);
         } catch (Exception e) {
+            //Utilizamos la excepcion para ubicar un error a la hora de eliminar.
             res.put("message", "Error al intentar eliminar el hotel.");
             res.put("error", e.getMessage());
             res.put("success", false);
