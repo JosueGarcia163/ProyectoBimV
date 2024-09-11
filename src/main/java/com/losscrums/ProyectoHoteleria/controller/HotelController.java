@@ -73,7 +73,7 @@ public class HotelController {
         }
     }
 
-    @GetMapping("/find/hotel/{id}")
+    @GetMapping("/list/hotel/{id}")
     public ResponseEntity<?> getHotel(@PathVariable long id) {
         Map<String, Object> res = new HashMap<>();
 
