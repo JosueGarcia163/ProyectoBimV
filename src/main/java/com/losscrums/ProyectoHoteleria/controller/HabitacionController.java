@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.losscrums.ProyectoHoteleria.DTO.HabitacionDTO;
 import com.losscrums.ProyectoHoteleria.model.Habitacion;
+import com.losscrums.ProyectoHoteleria.model.Hotel;
 import com.losscrums.ProyectoHoteleria.service.HabitacionService;
+import com.losscrums.ProyectoHoteleria.service.HotelService;
 
 import jakarta.validation.Valid;
 
@@ -34,6 +36,12 @@ public class HabitacionController {
 
     @Autowired
     HabitacionService habitacionService;
+
+    @Autowired
+    HotelController hotelController;
+
+    @Autowired
+    HotelService hotelService;
 
     // Rutas especificas para cada fumcion del programa
 
@@ -88,12 +96,14 @@ public class HabitacionController {
         try {
             //utilizamos los atributos del bean DTO de habitaciones
             Long id = null;
+            Hotel hotel = hotelService.findHotel(habitacion.getHotelId());
             Habitacion newHabitacion = new Habitacion(
                 id,
                 habitacion.getRoomType(),
                 habitacion.getCapacity(),
                 habitacion.getAvailability(),
-                habitacion.getAvailabilityDate()
+                habitacion.getAvailabilityDate(),
+                hotel
             );
             habitacionService.saveRoom(newHabitacion);
             res.put("message", "Habitacion recibida correctamente");

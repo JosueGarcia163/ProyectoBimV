@@ -6,5 +6,5 @@ import com.losscrums.ProyectoHoteleria.model.Habitacion;
 
 
 public interface HabitacionRepository extends JpaRepository<Habitacion, Long> {
-
+   
 }
