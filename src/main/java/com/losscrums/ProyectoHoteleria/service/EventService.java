@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.losscrums.ProyectoHoteleria.model.Event;
+import com.losscrums.ProyectoHoteleria.model.Hotel;
 import com.losscrums.ProyectoHoteleria.repository.EventRepository;
+;
 
 @Service
 public class EventService implements IEventService {
@@ -34,5 +36,11 @@ public class EventService implements IEventService {
     @Override
     public void eliminarEvento(Event event) {
         // Eliminar un evento
-        eventRepository.delete(event);}
+        eventRepository.delete(event);
+    }
+    @Override
+    public List<Event> listarEventosPorHotel(Hotel hotel) {
+        // Encontrar todos los eventos asociados a un hotel
+        return eventRepository.findByHotel(hotel);
+    }
 }
