@@ -6,7 +6,7 @@ import com.losscrums.ProyectoHoteleria.model.Services;
 
 // IServicio define los métodos para gestionar servicios en el sistema de hotelería.
 // Incluye operaciones para listar, buscar, guardar y eliminar servicios.
-public interface IServiceService {
+public interface IServicesService {
 
     // Obtiene una lista de todos los servicios.
     // @return una lista de objetos Servicio.
@@ -24,5 +24,5 @@ public interface IServiceService {
 
     // Elimina un servicio del sistema por su ID.
     // @param idService el identificador único del servicio a eliminar.
-    void deleteService(Long idService);
+    public void deleteService(Services Service);
 }

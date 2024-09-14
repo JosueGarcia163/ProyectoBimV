@@ -6,7 +6,7 @@ import com.losscrums.ProyectoHoteleria.model.Services;
 
 // ServicioRepository es la interfaz que extiende JpaRepository
 // para realizar operaciones CRUD en la entidad Servicio.
-public interface ServiceRepository extends JpaRepository<Services, Long> {
+public interface ServicesRepository extends JpaRepository<Services, Long> {
 
 }
 
