@@ -3,6 +3,8 @@ package com.losscrums.ProyectoHoteleria.service;
 import java.util.List;
 
 import com.losscrums.ProyectoHoteleria.model.Event;
+import com.losscrums.ProyectoHoteleria.model.Hotel;
+
 
 public interface IEventService {
 
@@ -17,4 +19,8 @@ public interface IEventService {
 
     // Método para eliminar un evento
     public void eliminarEvento(Event event);
+
+    // Método para listar eventos por hotel
+    List<Event> listarEventosPorHotel(Hotel hotel);
 }
+
