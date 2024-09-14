@@ -8,7 +8,7 @@ import com.losscrums.ProyectoHoteleria.model.Event;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
 
 public interface EventRepository extends JpaRepository<Event, Long>{
-    List<Event> findByHote (Hotel hotel);
+    List<Event> findByHotel (Hotel hotel);
 
 
 }
