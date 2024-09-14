@@ -5,33 +5,33 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.losscrums.ProyectoHoteleria.model.Habitacion;
-import com.losscrums.ProyectoHoteleria.repository.HabitacionRepository;
-import com.losscrums.ProyectoHoteleria.service.IService.IHabitacionService;
+import com.losscrums.ProyectoHoteleria.model.Room;
+import com.losscrums.ProyectoHoteleria.repository.RoomRepository;
+import com.losscrums.ProyectoHoteleria.service.IService.IRoomService;
 
 @Service
-public class HabitacionService implements IHabitacionService {
+public class RoomService implements IRoomService {
 
     @Autowired
-    private HabitacionRepository habitacionRepository;
+    private RoomRepository habitacionRepository;
 
     @Override
-    public List<Habitacion> listRoom() {
+    public List<Room> listRoom() {
         return habitacionRepository.findAll();
     }
 
     @Override
-    public Habitacion findRoom(Long id) {
+    public Room findRoom(Long id) {
         return habitacionRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Habitacion saveRoom(Habitacion habitacion) {
+    public Room saveRoom(Room habitacion) {
         return habitacionRepository.save(habitacion);
     }
 
     @Override
-    public void deleteRoom(Habitacion habitacion) {
+    public void deleteRoom(Room habitacion) {
         habitacionRepository.delete(habitacion);
     }
 
