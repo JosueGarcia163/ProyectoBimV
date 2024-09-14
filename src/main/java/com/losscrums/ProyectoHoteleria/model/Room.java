@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Data
-public class Habitacion {
+public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

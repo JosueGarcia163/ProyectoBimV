@@ -6,7 +6,7 @@ import lombok.Data;
 
 //Se utiliza la anotacion @Data para el creamiento de getters and setters
 @Data
-public class HabitacionDTO {
+public class RoomDTO {
     //Agregamos los atributos que despues vamos a utilizar para los
     //metodos en el controller
     @NotBlank(message = "El tipo de habitacion no puede ir vacio")

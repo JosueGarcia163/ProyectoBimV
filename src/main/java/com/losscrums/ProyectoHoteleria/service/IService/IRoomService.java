@@ -2,17 +2,17 @@ package com.losscrums.ProyectoHoteleria.service.IService;
 
 import java.util.List;
 
-import com.losscrums.ProyectoHoteleria.model.Habitacion;
+import com.losscrums.ProyectoHoteleria.model.Room;
 
-public interface IHabitacionService {
+public interface IRoomService {
 
-    List<Habitacion> listRoom();
+    List<Room> listRoom();
 
-    Habitacion findRoom(Long id);
+    Room findRoom(Long id);
 
-    Habitacion saveRoom(Habitacion habitacion);
+    Room saveRoom(Room habitacion);
 
-    public void deleteRoom(Habitacion habitacion);
+    public void deleteRoom(Room habitacion);
 
     //List<Habitacion> findByRoomType(String roomType);
 

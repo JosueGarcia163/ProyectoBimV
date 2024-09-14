@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.losscrums.ProyectoHoteleria.DTO.HabitacionDTO;
-import com.losscrums.ProyectoHoteleria.model.Habitacion;
+import com.losscrums.ProyectoHoteleria.DTO.RoomDTO;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
-import com.losscrums.ProyectoHoteleria.service.HabitacionService;
+import com.losscrums.ProyectoHoteleria.model.Room;
 import com.losscrums.ProyectoHoteleria.service.HotelService;
+import com.losscrums.ProyectoHoteleria.service.RoomService;
 
 import jakarta.validation.Valid;
 
@@ -32,10 +32,10 @@ import jakarta.validation.Valid;
 
 @RestController // esta anotacion implementa @Controller @ResponseBody
 @RequestMapping("/hoteleria/v1/auth") //Esta es la ruta general del controlador
-public class HabitacionController {
+public class RoomController {
 
     @Autowired
-    HabitacionService habitacionService;
+    RoomService habitacionService;
 
     @Autowired
     HotelController hotelController;
@@ -77,7 +77,7 @@ public class HabitacionController {
         La anotacion @Valid ejecuta las validaciones del bean de DTO
         RequestBody para el JSON 
         ModelAttribute para los archivos tambien */
-        @Valid @ModelAttribute HabitacionDTO habitacion,
+        @Valid @ModelAttribute RoomDTO habitacion,
         //BindingResult hace la captura de los errores si en tal no pasa las validaciones
         BindingResult result
     ){
@@ -97,7 +97,7 @@ public class HabitacionController {
             //utilizamos los atributos del bean DTO de habitaciones
             Long id = null;
             Hotel hotel = hotelService.findHotel(habitacion.getHotelId());
-            Habitacion newHabitacion = new Habitacion(
+            Room newHabitacion = new Room(
                 id,
                 habitacion.getRoomType(),
                 habitacion.getCapacity(),
@@ -120,7 +120,7 @@ public class HabitacionController {
         Map<String, Object> res = new HashMap<>();
         // La inyeccion de la depencia del servicio de habitaciones
         try{
-            Habitacion habitacion = habitacionService.findRoom(id);
+            Room habitacion = habitacionService.findRoom(id);
             return ResponseEntity.ok().body(habitacion);
         // Aqui capturas posibles errores
         } catch (CannotCreateTransactionException err) {
@@ -147,7 +147,7 @@ public class HabitacionController {
             /*Se ejecutan las validaciones que definimos en HabitacionDTO, con  la anotacion @ModelAttribute 
             indicamos que el parametro habitacion debe ser enlazado con los datos del formulario en la 
             solicitud del multipart */            
-            @Valid @ModelAttribute HabitacionDTO habitacion,
+            @Valid @ModelAttribute RoomDTO habitacion,
             /* Es una interfaz que se usa para capturar y manejar los errores de validación que pueden ocurrir 
             durante el proceso de enlace de datos */
             BindingResult result
@@ -162,7 +162,7 @@ public class HabitacionController {
         }
         try {
             // Busca la habitacion existente en la bd por su id
-            Habitacion existingHabitacion = habitacionService.findRoom(id);
+            Room existingHabitacion = habitacionService.findRoom(id);
             if (existingHabitacion == null) {
                 res.put("message", "No se pudo encontrar la habitacion con la identicacion proporcionada");
                 return ResponseEntity.internalServerError().body(res);
@@ -194,7 +194,7 @@ public class HabitacionController {
         Map<String, Object> res = new HashMap<>();
         try{
             //Buscamos el id de la habitacion que se va eliminar
-            Habitacion habitacion = habitacionService.findRoom(id);
+            Room habitacion = habitacionService.findRoom(id);
             //Creamos un if para validar si se encuentra el id
             if(habitacion == null){
                 //Modificamos el Map de res para que nos muestre este mensaje junto aun error del
