@@ -31,14 +31,11 @@ import jakarta.validation.Valid;
 
 
 @RestController // esta anotacion implementa @Controller @ResponseBody
-@RequestMapping("/hoteleria/v1/auth") //Esta es la ruta general del controlador
+@RequestMapping("/hoteleria/v1/room") //Esta es la ruta general del controlador
 public class RoomController {
 
     @Autowired
     RoomService habitacionService;
-
-    @Autowired
-    HotelController hotelController;
 
     @Autowired
     HotelService hotelService;
@@ -49,8 +46,8 @@ public class RoomController {
      * Metodo de para listar las habitaciones
      * @return ResponseEntity
      */
-    @GetMapping("/list/habitacion")
-    public ResponseEntity<?> getMethodName() {
+    @GetMapping("/list")
+    public ResponseEntity<?> listRoom() {
         Map<String, Object> res = new HashMap<>();
         // Se inyecta la dependencia del servicio de habitaciones
         try{
@@ -71,13 +68,13 @@ public class RoomController {
         }
     }
 
-    @PostMapping("/post/habitacion")
-    public ResponseEntity<?> addHabitacion(
+    @PostMapping("/post")
+    public ResponseEntity<?> addRoom(
         /* multipart-formadata
         La anotacion @Valid ejecuta las validaciones del bean de DTO
         RequestBody para el JSON 
-        ModelAttribute para los archivos tambien */
-        @Valid @ModelAttribute RoomDTO habitacion,
+        ModelAttribute para los archivos tambien. */
+        @Valid  @ModelAttribute RoomDTO habitacion,
         //BindingResult hace la captura de los errores si en tal no pasa las validaciones
         BindingResult result
     ){
@@ -109,14 +106,14 @@ public class RoomController {
             res.put("message", "Habitacion recibida correctamente");
             return ResponseEntity.ok(res);
         } catch (Exception err) {
-            res.put("message", "Eror al guardar la habitacion, intente mas tarde");
+            res.put("message", "Error al guardar la habitacion, intente mas tarde");
             res.put("error", err);
             return ResponseEntity.internalServerError().body(res);
         }
     }
 
-    @GetMapping("/list/habitacion/{id}")
-    public ResponseEntity<?> getMethodRoomId(@PathVariable long id) {
+    @GetMapping("/list/{id}")
+    public ResponseEntity<?> getRoomId(@PathVariable long id) {
         Map<String, Object> res = new HashMap<>();
         // La inyeccion de la depencia del servicio de habitaciones
         try{
@@ -139,7 +136,7 @@ public class RoomController {
     }
 
     // Creamos el metodo de editar habitacion
-    @PutMapping("/put/habitacion/{id}")
+    @PutMapping("/put/{id}")
     // Utilizamos la clase reponseEntity el cual espara un valor de repuesta
     public ResponseEntity<?> editRoom(
             //Esperamos que se nos otorgue la id con el que vamos a editar
@@ -185,7 +182,7 @@ public class RoomController {
     }
 
     //Se cera el metodo de eliminar habitacion
-    @DeleteMapping("/delete/habitacion/{id}")
+    @DeleteMapping("/delete/{id}")
     // Se utiliza la clase responseEntity con la clase hashMap para devolver un String
     // y un Object
     public ResponseEntity<Map<String, Object>> deleteRoom(
