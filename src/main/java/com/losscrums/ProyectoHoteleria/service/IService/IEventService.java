@@ -23,4 +23,6 @@ public interface IEventService {
 
     // Método para listar eventos por hotel
     List<EventResponseDTO> getEventforHotel(Long hotelId);
+
+    public Event editEvent(Long idEvent, EventSaveDTO eventDTO);
 }

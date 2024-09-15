@@ -64,6 +64,31 @@ public class EventService implements IEventService {
 
     }
 
+    @Override
+    public Event editEvent(Long idEvent, EventSaveDTO eventDTO) {
+        try {
+            // Buscar el evento existente por su ID
+            Event existingEvent = eventRepository.findById(idEvent)
+                    .orElseThrow(() -> new IllegalArgumentException("Evento no encontrado con el ID: " + idEvent));
+
+            // Actualizar los campos del evento existente con los nuevos datos
+            existingEvent.setEventType(eventDTO.getEventType());
+            existingEvent.setName(eventDTO.getName());
+            existingEvent.setCost(eventDTO.getCost());
+            existingEvent.setDateStart(Timestamp.valueOf(eventDTO.getDateStart()));
+            existingEvent.setDateFinish(Timestamp.valueOf(eventDTO.getDateFinish()));
+
+            // Buscar el hotel asociado y actualizar el evento
+            Hotel hotel = hotelService.findHotel(eventDTO.getHotelId());
+            existingEvent.setHotel(hotel);
+
+            // Guardar el evento actualizado
+            return eventRepository.save(existingEvent);
+        } catch (Exception err) {
+            throw new IllegalArgumentException("Error al editar el evento", err);
+        }
+    }
+
     //Metodo que declaramos en el IService que nos sirve para eliminar.
     @Override
     public void deleteEvent(Event event) {
