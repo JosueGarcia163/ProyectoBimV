@@ -30,7 +30,7 @@ import com.losscrums.ProyectoHoteleria.service.HotelService;
 import jakarta.validation.Valid;
 
 @RestController // Implementa @Controller @ResponseBody
-@RequestMapping("/hoteleria/v1/auth") // Ruta general
+@RequestMapping("/hoteleria/v1/hotel") // Ruta general
 public class HotelController {
 
     @Autowired
@@ -45,7 +45,7 @@ public class HotelController {
      * Metodo para listar usuarios
      * @return ResponseEntity con las diferentes 
      */
-    @GetMapping("/list/hotel")
+    @GetMapping("/list")
     public ResponseEntity<?> listHotel() {
         Map<String, Object> res = new HashMap<>();
 
@@ -73,7 +73,7 @@ public class HotelController {
         }
     }
 
-    @GetMapping("/find/hotel/{id}")
+    @GetMapping("/list/{id}")
     public ResponseEntity<?> getHotel(@PathVariable long id) {
         Map<String, Object> res = new HashMap<>();
 
@@ -101,7 +101,7 @@ public class HotelController {
         }
     }
 
-    @PostMapping("/post/hotel")
+    @PostMapping("/post")
     public ResponseEntity<?> postHotel(@RequestPart("profilePicture") MultipartFile profilePicture,
             // Multipart-formadata
             //@Valid ejecuta todas las validaciones del modelo DTO
@@ -150,7 +150,7 @@ public class HotelController {
     }
 
     //Creamos el metodo de editar hotel
-    @PutMapping("/put/hotel/{id}")
+    @PutMapping("/put/{id}")
     //Utilizamos la clase reponseEntity el cual espera un valor.
     public ResponseEntity<?> editHotel(
             //Esperamos la id para buscar el que vamos a editar
@@ -220,7 +220,7 @@ public class HotelController {
     }
 
     //Se crea el metodo de eliminar hotel.
-    @DeleteMapping("/delete/hotel/{id}")
+    @DeleteMapping("/delete/{id}")
     // Se utiliza la clase response entity con la clase Hash map para devolver un String y un objeto.
     public ResponseEntity<Map<String, Object>> deleteHotel(
             // Se espera el id para que se pueda buscar el que se va a eliminar.    
