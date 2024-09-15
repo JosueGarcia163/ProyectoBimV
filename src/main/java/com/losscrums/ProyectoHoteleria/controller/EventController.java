@@ -24,7 +24,6 @@ import com.losscrums.ProyectoHoteleria.DTO.EventResponseDTO;
 import com.losscrums.ProyectoHoteleria.DTO.EventSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Event;
 import com.losscrums.ProyectoHoteleria.service.EventService;
-import com.losscrums.ProyectoHoteleria.service.HotelService;
 
 import jakarta.validation.Valid;
 
@@ -34,9 +33,6 @@ public class EventController {
 
     @Autowired
     EventService eventService;
-
-    @Autowired
-    HotelService hotelService;
 
     //Funcion para encontrar evento por Id hotel.
     @GetMapping("/{hotelId}")

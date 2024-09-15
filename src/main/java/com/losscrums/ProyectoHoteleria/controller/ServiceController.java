@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.losscrums.ProyectoHoteleria.DTO.ServiceResponseDTO;
 import com.losscrums.ProyectoHoteleria.DTO.ServiceSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Services;
-import com.losscrums.ProyectoHoteleria.service.EventService;
 import com.losscrums.ProyectoHoteleria.service.ServicesService;
 
 import jakarta.validation.Valid;
@@ -37,8 +36,6 @@ public class ServiceController {
     @Autowired
     ServicesService servicesService;
     
-    @Autowired
-    EventService eventService;
 
     @GetMapping("/{eventId}")
     public ResponseEntity<?> getServiceforEvent(@PathVariable Long eventId){
