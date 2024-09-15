@@ -2,6 +2,7 @@ package com.losscrums.ProyectoHoteleria.service.IService;
 
 import java.util.List;
 
+import com.losscrums.ProyectoHoteleria.DTO.EventResponseDTO;
 import com.losscrums.ProyectoHoteleria.DTO.EventSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Event;
 
@@ -21,5 +22,5 @@ public interface IEventService {
     public void deleteEvent(Event event);
 
     // Método para listar eventos por hotel
-    List<EventSaveDTO> getEventforHotel(Long hotelId);
+    List<EventResponseDTO> getEventforHotel(Long hotelId);
 }

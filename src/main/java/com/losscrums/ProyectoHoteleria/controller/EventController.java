@@ -6,7 +6,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.losscrums.ProyectoHoteleria.DTO.EventResponseDTO;
 import com.losscrums.ProyectoHoteleria.DTO.EventSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Event;
 import com.losscrums.ProyectoHoteleria.service.EventService;
@@ -37,7 +40,7 @@ public class EventController {
     public ResponseEntity<?> getEventforHotel(@PathVariable Long hotelId) {
         Map<String, Object> res = new HashMap<>();
         try {
-            List<EventSaveDTO> eventSaveDTOs = eventService.getEventforHotel(hotelId);
+            List<EventResponseDTO> eventSaveDTOs = eventService.getEventforHotel(hotelId);
             //Validacion, si no encuentra nada por medio del Id.
             if (eventSaveDTOs == null || eventSaveDTOs.isEmpty()) {
                 res.put("message", "Aún no tienes eventos creados");
@@ -78,7 +81,29 @@ public class EventController {
         }
     }
 
-    
+    @GetMapping("/list")
+    public ResponseEntity<?> listEvent() {
+        Map<String, Object> res = new HashMap<>();
+        // Se inyecta la dependencia del servicio de habitaciones
+        try{
+            return ResponseEntity.ok().body(eventService.listEvent());
+        // Aqui se captura los posibles errores
+        } catch (CannotCreateTransactionException err) {
+            res.put("Message", "Error al momento de conectarse a la db");
+            res.put("Error", err.getMessage().concat(err.getMostSpecificCause().getMessage()));
+            return ResponseEntity.status(503).body(res);    
+        } catch (DataAccessException err) {
+            res.put("Message", "Error al momento de consultar a la db");
+            res.put("Error", err.getMessage().concat(err.getMostSpecificCause().getMessage()));
+            return ResponseEntity.status(503).body(res);
+        } catch (Exception err) {
+            res.put("Message", "Error general al obtener datos");
+            res.put("Error", err.getMessage());
+            return ResponseEntity.internalServerError().body(res);
+        }
+    }
+
+
 
 
 

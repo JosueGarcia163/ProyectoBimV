@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.losscrums.ProyectoHoteleria.DTO.EventResponseDTO;
 import com.losscrums.ProyectoHoteleria.DTO.EventSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Event;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
@@ -72,22 +73,20 @@ public class EventService implements IEventService {
 
     //Funcion que nos sirve para poder buscar un evento por numero de Id de un hotel.
     @Override
-    public List<EventSaveDTO> getEventforHotel(Long hotelId) {
+    public List<EventResponseDTO> getEventforHotel(Long hotelId) {
         Hotel hotel = hotelService.findHotel(hotelId);
         List<Event> events = eventRepository.findByHotel(hotel);
         return events.stream()
-                .map(event -> new EventSaveDTO(
+                .map(event -> new EventResponseDTO(
+                event.getIdEvent(), // Asignar el ID del evento
                 event.getEventType(),
                 event.getName(),
                 event.getCost(),
-                event.getDateStart().toLocalDateTime(), // Convierte Timestamp a LocalDateTime
-                event.getDateFinish().toLocalDateTime(), // Convierte Timestamp a LocalDateTime
-
-                hotel.getId() // Asumiendo que el DTO también necesita el ID del hotel
+                event.getDateStart(), // Dejarlo como Timestamp
+                event.getDateFinish(), // Dejarlo como Timestamp
+                event.getHotel() // Asignar el objeto Hotel directamente
         ))
                 .collect(Collectors.toList());
-
-        // Encontrar todos los eventos asociados a un hotel
-        //return eventRepository.findByHotel(hotelId);
     }
+
 }
