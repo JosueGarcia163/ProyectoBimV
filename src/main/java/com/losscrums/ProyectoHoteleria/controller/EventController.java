@@ -103,6 +103,29 @@ public class EventController {
         }
     }
 
+    @GetMapping("/list/{idEvent}")
+    public ResponseEntity<?> findEventId(@PathVariable long idEvent) {
+        Map<String, Object> res = new HashMap<>();
+        // La inyeccion de la depencia del servicio de habitaciones
+        try{
+            Event event = eventService.findEvent(idEvent);
+            return ResponseEntity.ok().body(event);
+        // Aqui capturas posibles errores
+        } catch (CannotCreateTransactionException err) {
+            res.put("Message", "Error al momento de conectarse a la db");
+            res.put("Error", err.getMessage().concat(err.getMostSpecificCause().getMessage()));
+            return ResponseEntity.status(503).body(res);    
+        } catch (DataAccessException err) {
+            res.put("Message", "Error al momento de consultar a la db");
+            res.put("Error", err.getMessage().concat(err.getMostSpecificCause().getMessage()));
+            return ResponseEntity.status(503).body(res);
+        } catch (Exception err) {
+            res.put("Message", "Error general al obtener datos.");
+            res.put("Error", err.getMessage());
+            return ResponseEntity.internalServerError().body(res);
+        }
+    }
+
 
 
 
