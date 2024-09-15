@@ -7,14 +7,15 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -127,27 +128,36 @@ public class EventController {
         }
     }
 
-    @PutMapping("/put/{idEvent}")
-    public ResponseEntity<?> updateEvent(
-            @PathVariable Long idEvent, // Recibe el ID del evento en la URL
-            @ModelAttribute EventSaveDTO eventDTO, // Recibe el objeto EventSaveDTO con los datos actualizados
-            BindingResult result) {
-
-        if (result.hasErrors()) {
-            Map<String, Object> errors = new HashMap<>();
-            errors.put("Errors", result.getFieldErrors().stream()
-                    .map(error -> error.getDefaultMessage())
-                    .collect(Collectors.toList()));
-            return ResponseEntity.badRequest().body(errors);
+    @DeleteMapping("/delete/{id}")
+public ResponseEntity<Map<String, Object>> deleteEvent(
+    @PathVariable long id) { // Recibe el objeto Event con los datos del evento a eliminar
+    Map<String, Object> res = new HashMap<>();
+    try {
+        // Buscar el evento en la base de datos
+        Event existingEvent = eventService.findEvent(id);
+        
+        // Verificar si el evento existe
+        if (existingEvent == null) {
+            res.put("message", "No se encontró el evento con la identificación proporcionada");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         }
-
-        try {
-            // Llamar al servicio para actualizar el evento
-            Event updatedEvent = eventService.editEvent(idEvent, eventDTO);
-            return ResponseEntity.ok(updatedEvent);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error al actualizar el evento");
-        }
+        
+        // Eliminar el evento
+        eventService.deleteEvent(existingEvent);
+        res.put("message", "Evento eliminado correctamente");
+        res.put("success", true);
+        return ResponseEntity.ok(res);
+    } catch (Exception e) {
+        // Capturar cualquier error que ocurra al eliminar el evento
+        res.put("message", "Error al intentar eliminar el evento");
+        res.put("error", e.getMessage());
+        res.put("success", false);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
     }
+}
+
+
+
+
 
 }
