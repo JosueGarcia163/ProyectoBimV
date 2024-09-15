@@ -11,5 +11,4 @@ public interface EventRepository extends JpaRepository<Event, Long>{
     //Metodo que muestra una lista de eventos por algun hotel en especifico.
     List<Event> findByHotel (Hotel hotel);
 
-
 }

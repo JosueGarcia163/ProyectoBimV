@@ -7,11 +7,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 // La entidad Servicio representa un servicio disponible en el sistema de hotelería.
 // Incluye atributos como el tipo de servicio, capacidad, costo y descripción.
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Services {
 
