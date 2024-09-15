@@ -170,7 +170,11 @@ public class RoomController {
             existingHabitacion.setCapacity(habitacion.getCapacity());
             existingHabitacion.setAvailability(habitacion.getAvailability());
             existingHabitacion.setAvailabilityDate(habitacion.getAvailabilityDate());
+            //Creamos el set para modificar la llave foranea de room osea hotelId.
+            Hotel hotel = hotelService.findHotel(habitacion.getHotelId());
+            existingHabitacion.setHotel(hotel);
             // Se guarda los cambios en el servicio den habitacion
+            
             habitacionService.saveRoom(existingHabitacion);
             res.put("message", "Habitacion ha sido actualizada correctamente");
             return ResponseEntity.ok(res);
