@@ -44,6 +44,7 @@ public class ServiceController {
         Map<String, Object> res = new HashMap<>();
         try {
             List<ServiceResponseDTO> serviceSaveDTO = servicesService.getServiceforEvent(eventId);
+            //La validacion si algun caso no encuentra el id
             if(serviceSaveDTO == null || serviceSaveDTO.isEmpty()){
                 res.put("message", "Aun no tienes servicios creados");
                 return ResponseEntity.status(400).body(res);
@@ -87,9 +88,10 @@ public class ServiceController {
     @GetMapping("/list")
     public ResponseEntity<?> listServices() {
         Map<String, Object> res = new HashMap<>();
-
+        // Se inyecta la depencia del servicio de servicio
         try{
             return ResponseEntity.ok(servicesService.listServices());
+            // Aqui se captura los posibles errores que puedan ocurrir
         } catch (CannotCreateTransactionException err) {
             res.put("Message", "Error al momento de conectarse a la db");
             res.put("Error", err.getMessage().concat(err.getMostSpecificCause().getMessage()));
@@ -108,6 +110,7 @@ public class ServiceController {
     @GetMapping("/list/{idService}")
     public ResponseEntity<?> findServiceId(@PathVariable long idService){
         Map<String, Object> res = new HashMap<>();
+        // Se inyecta la depencia del servicio de servicio
         try {
             Services services = servicesService.findService(idService);
             return ResponseEntity.ok().body(services);
@@ -128,7 +131,9 @@ public class ServiceController {
     
     @GetMapping("/put/{idService}")
     public ResponseEntity<?> updateService(
+        //Recibe el ID del servicio en la URL
         @PathVariable Long idService,
+        //Recibe el Objeto de ServiceSaveDTO con los datos actualizados
         @ModelAttribute ServiceSaveDTO serviceDTO,
         BindingResult result) {
             if(result.hasErrors()){
@@ -140,6 +145,7 @@ public class ServiceController {
                 return ResponseEntity.badRequest().body(errors);
             }
             try {
+                // Llama al servicio para actualizar el servicio
                 Services updatServices = servicesService.editServices(idService, serviceDTO);
                 return ResponseEntity.ok(updatServices);
             } catch (Exception errException) {
@@ -149,21 +155,26 @@ public class ServiceController {
     
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Map<String, Object>> deleteService(
+        // Recibe el onjeto de Services con los datos del servicio a eliminar
         @PathVariable long id) {
             Map<String, Object> res = new HashMap<>();
             try{
+                //Busca en servicio en la base de datos
                 Services existingServices = servicesService.findService(id);
 
+                // Verifica si el servicio de verdad existe
                 if(existingServices == null){
                     res.put("message", "No se encontro el servicio co la identificacion proporcionada");
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
                 }
 
+                //Elimina el servicio
                 servicesService.deleteService(existingServices);
                 res.put("message", "Servicio eliminado correctamente");
                 res.put("success", true);
                 return ResponseEntity.ok(res);
             }catch (Exception err){
+                // Aqui captura cualquier error que pueda ocurrir al eliminar el servicio
                 res.put("message", "Error al intentar eliminar el servicio");
                 res.put("error", err.getMessage());
                 res.put("success", false);
