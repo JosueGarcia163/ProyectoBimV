@@ -78,9 +78,13 @@ public class ServiceController {
             Services services = servicesService.saveServices(serviceDTO);
             res.put("message", "Reservacion guardada exitosamente");
             res.put("reservation", services);
-            return Respo
-        } catch (Exception e) {
-            // TODO: handle exception
+            return ResponseEntity.badRequest().body(res);
+        } catch (Exception err) {
+            res.put("message", "Error al guardar el servicio, intente de nevo mas tarde");
+            res.put("error", err.getMessage());
+            return ResponseEntity.internalServerError().body(res);
         }
     }
+
+    
 }
