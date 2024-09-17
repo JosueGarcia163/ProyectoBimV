@@ -33,5 +33,6 @@ public class Hotel {
 
     //No es obligatoria
     private String profilePicture;
+    
 }
 

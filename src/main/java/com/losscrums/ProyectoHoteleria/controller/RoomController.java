@@ -20,9 +20,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.losscrums.ProyectoHoteleria.DTO.RoomDTO;
+import com.losscrums.ProyectoHoteleria.DTO.RoomSaveDTO;
+import com.losscrums.ProyectoHoteleria.DTO.RoomResponseDTO;
+import com.losscrums.ProyectoHoteleria.model.Event;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
 import com.losscrums.ProyectoHoteleria.model.Room;
+import com.losscrums.ProyectoHoteleria.service.EventService;
 import com.losscrums.ProyectoHoteleria.service.HotelService;
 import com.losscrums.ProyectoHoteleria.service.RoomService;
 
@@ -35,10 +38,13 @@ import jakarta.validation.Valid;
 public class RoomController {
 
     @Autowired
-    RoomService habitacionService;
+    RoomService roomService;
 
     @Autowired
     HotelService hotelService;
+
+    @Autowired
+    EventService eventService;
 
     // Rutas especificas para cada fumcion del programa
 
@@ -51,7 +57,7 @@ public class RoomController {
         Map<String, Object> res = new HashMap<>();
         // Se inyecta la dependencia del servicio de habitaciones
         try{
-            return ResponseEntity.ok().body(habitacionService.listRoom());
+            return ResponseEntity.ok().body(roomService.listRoom());
         // Aqui se captura los posibles errores
         } catch (CannotCreateTransactionException err) {
             res.put("Message", "Error al momento de conectarse a la db");
@@ -74,7 +80,7 @@ public class RoomController {
         La anotacion @Valid ejecuta las validaciones del bean de DTO
         RequestBody para el JSON 
         ModelAttribute para los archivos tambien. */
-        @Valid  @ModelAttribute RoomDTO habitacion,
+        @Valid  @ModelAttribute RoomSaveDTO room,
         //BindingResult hace la captura de los errores si en tal no pasa las validaciones
         BindingResult result
     ){
@@ -93,16 +99,18 @@ public class RoomController {
         try {
             //utilizamos los atributos del bean DTO de habitaciones
             Long id = null;
-            Hotel hotel = hotelService.findHotel(habitacion.getHotelId());
-            Room newHabitacion = new Room(
+            Hotel hotel = hotelService.findHotel(room.getHotelId());
+            Event event = eventService.findEvent(room.getEventId());
+            Room newRoom = new Room(
                 id,
-                habitacion.getRoomType(),
-                habitacion.getCapacity(),
-                habitacion.getAvailability(),
-                habitacion.getAvailabilityDate(),
-                hotel
+                room.getRoomType(),
+                room.getCapacity(),
+                room.getAvailability(),
+                room.getAvailabilityDate(),
+                hotel,
+                event
             );
-            habitacionService.saveRoom(newHabitacion);
+            roomService.saveRoom(newRoom);
             res.put("message", "Habitacion recibida correctamente");
             return ResponseEntity.ok(res);
         } catch (Exception err) {
@@ -117,7 +125,7 @@ public class RoomController {
         Map<String, Object> res = new HashMap<>();
         // La inyeccion de la depencia del servicio de habitaciones
         try{
-            Room habitacion = habitacionService.findRoom(id);
+            Room habitacion = roomService.findRoom(id);
             return ResponseEntity.ok().body(habitacion);
         // Aqui capturas posibles errores
         } catch (CannotCreateTransactionException err) {
@@ -144,7 +152,7 @@ public class RoomController {
             /*Se ejecutan las validaciones que definimos en HabitacionDTO, con  la anotacion @ModelAttribute 
             indicamos que el parametro habitacion debe ser enlazado con los datos del formulario en la 
             solicitud del multipart */            
-            @Valid @ModelAttribute RoomDTO habitacion,
+            @Valid @ModelAttribute RoomSaveDTO room,
             /* Es una interfaz que se usa para capturar y manejar los errores de validación que pueden ocurrir 
             durante el proceso de enlace de datos */
             BindingResult result
@@ -159,19 +167,25 @@ public class RoomController {
         }
         try {
             // Busca la habitacion existente en la bd por su id
-            Room existingHabitacion = habitacionService.findRoom(id);
+            Room existingHabitacion = roomService.findRoom(id);
             if (existingHabitacion == null) {
                 res.put("message", "No se pudo encontrar la habitacion con la identicacion proporcionada");
                 return ResponseEntity.internalServerError().body(res);
             }
             // Actualiza los datos de la habitacion con los valores nuevos del bean DTO
             // de habitacion
-            existingHabitacion.setRoomType(habitacion.getRoomType());
-            existingHabitacion.setCapacity(habitacion.getCapacity());
-            existingHabitacion.setAvailability(habitacion.getAvailability());
-            existingHabitacion.setAvailabilityDate(habitacion.getAvailabilityDate());
+            existingHabitacion.setRoomType(room.getRoomType());
+            existingHabitacion.setCapacity(room.getCapacity());
+            existingHabitacion.setAvailability(room.getAvailability());
+            existingHabitacion.setAvailabilityDate(room.getAvailabilityDate());
+            //Creamos el set para modificar la llave foranea de room osea hotelId.
+            Hotel hotel = hotelService.findHotel(room.getHotelId());
+            Event event = eventService.findEvent(room.getEventId());
+            existingHabitacion.setHotel(hotel);
+            existingHabitacion.setEvent(event);
             // Se guarda los cambios en el servicio den habitacion
-            habitacionService.saveRoom(existingHabitacion);
+            
+            roomService.saveRoom(existingHabitacion);
             res.put("message", "Habitacion ha sido actualizada correctamente");
             return ResponseEntity.ok(res);
         } catch (Exception err) {
@@ -191,9 +205,9 @@ public class RoomController {
         Map<String, Object> res = new HashMap<>();
         try{
             //Buscamos el id de la habitacion que se va eliminar
-            Room habitacion = habitacionService.findRoom(id);
+            Room room = roomService.findRoom(id);
             //Creamos un if para validar si se encuentra el id
-            if(habitacion == null){
+            if(room == null){
                 //Modificamos el Map de res para que nos muestre este mensaje junto aun error del
                 //protocolo HTTP
                 res.put("message", "No se encontro la habitacion con la identificacion proporcionada");
@@ -201,7 +215,7 @@ public class RoomController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
             }
             //Eliminamos la habitacion que se solicito
-            habitacionService.deleteRoom(habitacion);
+            roomService.deleteRoom(room);
             res.put("message", "Habitacion eliminada correctamente");
             res.put("success", true);
             return ResponseEntity.ok(res);
@@ -211,6 +225,47 @@ public class RoomController {
             res.put("error", e.getMessage());
             res.put("success", false);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+        }
+    }
+
+
+    //Funcion para encontrar habitacion por Id hotel.
+    @GetMapping("/hotel/{hotelId}")
+    public ResponseEntity<?> getRoomforHotel(@PathVariable Long hotelId) {
+        Map<String, Object> res = new HashMap<>();
+        try {
+            List<RoomResponseDTO> roomSaveDTOs = roomService.getRoomforHotel(hotelId);
+            //Validacion, si no encuentra nada por medio del Id.
+            if (roomSaveDTOs == null || roomSaveDTOs.isEmpty()) {
+                res.put("message", "Aún no tienes eventos creados");
+                return ResponseEntity.status(404).body(res);
+            } else {
+                return ResponseEntity.ok(roomSaveDTOs);
+            }
+        } catch (Exception err) {
+            res.put("message", "Error general al obtener los datos");
+            res.put("error", err);
+            return ResponseEntity.internalServerError().body(res);
+        }
+    }
+
+    //Funcion para encontrar habitacion por Id Evento.
+    @GetMapping("/event/{eventId}")
+    public ResponseEntity<?> getRoomforEvent(@PathVariable Long eventId) {
+        Map<String, Object> res = new HashMap<>();
+        try {
+            List<RoomResponseDTO> roomSaveDTOs = roomService.getRoomforEvent(eventId);
+            //Validacion, si no encuentra nada por medio del Id.
+            if (roomSaveDTOs == null || roomSaveDTOs.isEmpty()) {
+                res.put("message", "Aún no tienes eventos creados");
+                return ResponseEntity.status(404).body(res);
+            } else {
+                return ResponseEntity.ok(roomSaveDTOs);
+            }
+        } catch (Exception err) {
+            res.put("message", "Error general al obtener los datos");
+            res.put("error", err);
+            return ResponseEntity.internalServerError().body(res);
         }
     }
 }

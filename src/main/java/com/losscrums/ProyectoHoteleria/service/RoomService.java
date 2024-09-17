@@ -1,10 +1,14 @@
 package com.losscrums.ProyectoHoteleria.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.losscrums.ProyectoHoteleria.DTO.RoomResponseDTO;
+import com.losscrums.ProyectoHoteleria.model.Event;
+import com.losscrums.ProyectoHoteleria.model.Hotel;
 import com.losscrums.ProyectoHoteleria.model.Room;
 import com.losscrums.ProyectoHoteleria.repository.RoomRepository;
 import com.losscrums.ProyectoHoteleria.service.IService.IRoomService;
@@ -13,27 +17,69 @@ import com.losscrums.ProyectoHoteleria.service.IService.IRoomService;
 public class RoomService implements IRoomService {
 
     @Autowired
-    private RoomRepository habitacionRepository;
+    private RoomRepository roomRepository;
+
+    @Autowired
+    private EventService eventService;
+
+    @Autowired
+    private HotelService hotelService;
 
     @Override
     public List<Room> listRoom() {
-        return habitacionRepository.findAll();
+        return roomRepository.findAll();
     }
 
     @Override
     public Room findRoom(Long id) {
-        return habitacionRepository.findById(id).orElse(null);
+        return roomRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Room saveRoom(Room habitacion) {
-        return habitacionRepository.save(habitacion);
+    public Room saveRoom(Room room) {
+        return roomRepository.save(room);
     }
 
     @Override
-    public void deleteRoom(Room habitacion) {
-        habitacionRepository.delete(habitacion);
+    public void deleteRoom(Room room) {
+        roomRepository.delete(room);
     }
+
+    @Override
+    public List<RoomResponseDTO> getRoomforHotel(Long hotelId) {
+        Hotel hotel = hotelService.findHotel(hotelId);
+        List<Room> rooms = roomRepository.findByHotel(hotel);
+        return rooms.stream()
+                .map(room -> new RoomResponseDTO(
+                room.getId(),
+                room.getRoomType(),
+                room.getCapacity(),
+                room.getAvailability(),
+                room.getAvailabilityDate(),
+                room.getHotel(),
+                room.getEvent()
+        ))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RoomResponseDTO> getRoomforEvent(Long eventId) {
+        Event event = eventService.findEvent(eventId);
+        List<Room> rooms = roomRepository.findByEvent(event);
+        return rooms.stream()
+                .map(room -> new RoomResponseDTO(
+                room.getId(),
+                room.getRoomType(),
+                room.getCapacity(),
+                room.getAvailability(),
+                room.getAvailabilityDate(),
+                room.getHotel(),
+                room.getEvent()
+        ))
+                .collect(Collectors.toList());
+    }
+
+    
 
   
 }

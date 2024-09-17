@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.losscrums.ProyectoHoteleria.DTO.HotelDTO;
+import com.losscrums.ProyectoHoteleria.DTO.HotelSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
 import com.losscrums.ProyectoHoteleria.service.CloudinaryService;
 import com.losscrums.ProyectoHoteleria.service.HotelService;
@@ -107,7 +107,7 @@ public class HotelController {
             //@Valid ejecuta todas las validaciones del modelo DTO
             //RequestBody para el JSON / ModelAttribute para archivos tambien.
 
-            @Valid @ModelAttribute HotelDTO hotel,
+            @Valid @ModelAttribute HotelSaveDTO hotel,
             //BindingResult captura los errores si en tal caso no pasa las validaciones.
             BindingResult result
     ) {
@@ -132,7 +132,7 @@ public class HotelController {
             Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(profilePicture,
                     "profilesHotel");
 
-            String urlProfilePicture = uploadResult.get("url").toString();
+          
             String img = uploadResult.get("url").toString();
             Long id = null;
             Hotel newHotel = new Hotel(id, hotel.getName(), hotel.getAddress(), hotel.getNumStars(), hotel.getComfort(), img);
@@ -164,7 +164,7 @@ public class HotelController {
              * debe ser enlazado con los datos del formulario en la solicitud del multipart.
              * 
              */
-            @Valid @ModelAttribute HotelDTO hotel,
+            @Valid @ModelAttribute HotelSaveDTO hotel,
             /* Es una interfaz que se usa para capturar y manejar los errores de validación que pueden ocurrir 
             durante el proceso de enlace de datos.  */
             BindingResult result
