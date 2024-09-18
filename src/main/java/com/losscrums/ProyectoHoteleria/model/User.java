@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity //The Entity annotation is used to map the model from Hibernate
 @AllArgsConstructor //Automatically generates a constructor that accepts the parameters of the class
 @NoArgsConstructor //Generate constructs without arguments
-public class UserRepository {
+public class User {
 
     @Id
     @GeneratedValue(strtegy = GenerationType.IDENTITY)
