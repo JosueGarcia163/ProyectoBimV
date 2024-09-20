@@ -136,9 +136,9 @@ public class HotelController {
             String img = uploadResult.get("url").toString();
             Long id = null;
             Hotel newHotel = new Hotel(id, hotel.getName(), hotel.getAddress(), hotel.getNumStars(), hotel.getComfort(), img);
-            //Utiliza servicios de cloudinary para subir la imagen que manda el usuario.
+            //Utiliza servicios de cloudinary para subir la imagen que manda el hotel.
             hotelService.saveHotel(newHotel);
-            res.put("message", "usuario recibido correctamente.");
+            res.put("message", "hotel recibido correctamente.");
             return ResponseEntity.ok(res);
 
         } catch (Exception err) {

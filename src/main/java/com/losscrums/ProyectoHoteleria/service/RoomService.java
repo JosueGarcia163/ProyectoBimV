@@ -51,7 +51,7 @@ public class RoomService implements IRoomService {
         List<Room> rooms = roomRepository.findByHotel(hotel);
         return rooms.stream()
                 .map(room -> new RoomResponseDTO(
-                room.getId(),
+                room.getIdRoom(),
                 room.getRoomType(),
                 room.getCapacity(),
                 room.getAvailability(),
@@ -68,7 +68,7 @@ public class RoomService implements IRoomService {
         List<Room> rooms = roomRepository.findByEvent(event);
         return rooms.stream()
                 .map(room -> new RoomResponseDTO(
-                room.getId(),
+                room.getIdRoom(),
                 room.getRoomType(),
                 room.getCapacity(),
                 room.getAvailability(),

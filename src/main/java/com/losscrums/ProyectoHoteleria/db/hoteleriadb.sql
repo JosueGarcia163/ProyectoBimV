@@ -23,52 +23,54 @@ VALUES ('Hotel Luna', 'Avenida del Lago 202, Sevilla', 3, 'Sencillo');
  
 
 -- Insertar evento 1
-INSERT INTO event (event_type, name, cost, date_start, date_finish, hotel_id)
+INSERT INTO event (event_type, name, cost, date_start, date_finish, hotel_id_hotel)
 VALUES 
 ('Conference', 'Tech Conference 2024', 150.00, '2024-11-01 09:00:00', '2024-11-01 17:00:00', 1);
 
 -- Insertar evento 2
-INSERT INTO event (event_type, name, cost, date_start, date_finish, hotel_id)
+INSERT INTO event (event_type, name, cost, date_start, date_finish, hotel_id_hotel)
 VALUES 
 ('Wedding', 'John and Jane Wedding', 500.00, '2024-12-15 12:00:00', '2024-12-15 23:59:00', 2);
 
 -- Insertar evento 3
-INSERT INTO event (event_type, name, cost, date_start, date_finish, hotel_id)
+INSERT INTO event (event_type, name, cost, date_start, date_finish, hotel_id_hotel)
 VALUES 
 ('Concert', 'Rock Fest 2024', 200.00, '2024-11-20 18:00:00', '2024-11-20 22:00:00', 3);
 
 -- Insertar evento 4
-INSERT INTO event (event_type, name, cost, date_start, date_finish, hotel_id)
+INSERT INTO event (event_type, name, cost, date_start, date_finish, hotel_id_hotel)
 VALUES 
-('Seminar', 'Business Growth Seminar', 100.00, '2024-11-05 10:00:00', '2024-11-05 16:00:00', 4);
+('Seminar', 'Business Growth Seminar', 100.00, '2024-11-05 10:00:00', '2024-11-05 16:00:00', 5);
 
 -- Insertar evento 5
-INSERT INTO event (event_type, name, cost, date_start, date_finish, hotel_id)
+INSERT INTO event (event_type, name, cost, date_start, date_finish, hotel_id_hotel)
 VALUES 
-('Party', 'New Year Eve Party', 250.00, '2024-12-31 20:00:00', '2025-01-01 01:00:00', 5);
+('Party', 'New Year Eve Party', 250.00, '2024-12-31 20:00:00', '2025-01-01 01:00:00', 4);
+
+INSERT INTO event (event_type, name, cost, date_start, date_finish, hotel_id_hotel)
+VALUES 
+('Party', 'party', 250.00, '2024-12-31 20:00:00', '2025-01-01 01:00:00', 4);
 
 -- Inserción 1
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id, event_id_event) 
-VALUES ('Suite', '2 personas', 'Disponible', '2024-09-15', 1,1);
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
+VALUES ('Suite', '2 personas', 'Disponible', '2024-09-15', 2,5);
  
 -- Inserción 2
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id) 
-VALUES ('Doble', '2 personas', 'No Disponible', '2024-09-16', 2,2);
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
+VALUES ('Doble', '2 personas', 'No Disponible', '2024-09-16', 1,4);
  
 -- Inserción 3
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id) 
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
 VALUES ('Individual', '1 persona', 'Disponible', '2024-09-17', 3,3);
  
 -- Inserción 4
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id) 
-VALUES ('Familiar', '4 personas', 'Disponible', '2024-09-18', 4,4);
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
+VALUES ('Familiar', '4 personas', 'Disponible', '2024-09-18', 4,2);
  
 -- Inserción 5
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id) 
-VALUES ('Suite', '2 personas', 'No Disponible', '2024-09-19', 5,5);
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
+VALUES ('Suite', '2 personas', 'No Disponible', '2024-09-19', 5,1);
  
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id) 
-VALUES ('Suite', '2 personas', 'No Disponible', '2024-09-19', 1,5);
 
 INSERT INTO services (type_service, capacity, cost, description, event_id_event)
 VALUES ('Spa', 10, 50.00, 'Servicio de spa completo con masajes', 1);
@@ -90,5 +92,5 @@ VALUES ('Servicio de catering', 100, 200.00, 'Catering para eventos especiales',
  
 select * from hotel;
 select * from room;
-select * from event;
+select * from event;	
 select * from services;

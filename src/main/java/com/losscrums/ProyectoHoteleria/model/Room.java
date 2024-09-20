@@ -20,7 +20,7 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idRoom;
     @NotBlank
     private String roomType;
     @NotBlank
