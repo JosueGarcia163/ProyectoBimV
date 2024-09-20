@@ -2,7 +2,6 @@ package com.losscrums.ProyectoHoteleria.DTO;
 
 import com.losscrums.ProyectoHoteleria.model.Event;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,3 +17,4 @@ public class ServiceResponseDTO {
     private String description;
     private Event event;
 }
+

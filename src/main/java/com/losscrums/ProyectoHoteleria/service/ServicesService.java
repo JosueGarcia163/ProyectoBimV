@@ -49,16 +49,16 @@ public class ServicesService implements IServicesService {
         try {
             Event event = eventService.findEvent(serviceDTO.getEventId());
             Services services = new Services(
-                null,
-                serviceDTO.getTypeService(),
-                serviceDTO.getCapacity(),
-                serviceDTO.getCost(),
-                serviceDTO.getDescription(),
-                event
+                    null,
+                    serviceDTO.getTypeService(),
+                    serviceDTO.getCapacity(),
+                    serviceDTO.getCost(),
+                    serviceDTO.getDescription(),
+                    event
             );
             return serviceRepository.save(services);
         } catch (Exception err) {
-            throw new IllegalArgumentException("Error al ingresar un dato", err); 
+            throw new IllegalArgumentException("Error al ingresar un dato", err);
         }
     }
 
@@ -70,11 +70,11 @@ public class ServicesService implements IServicesService {
     }
 
     @Override
-    public Services editServices(Long idService, ServiceSaveDTO serviceDTO){
+    public Services editServices(Long idService, ServiceSaveDTO serviceDTO) {
         try {
             Services existingService = serviceRepository.findById(idService)
-            .orElseThrow(() -> 
-            new IllegalArgumentException("Servicio no encontrado con el ID: " + idService));
+                    .orElseThrow(()
+                            -> new IllegalArgumentException("Servicio no encontrado con el ID: " + idService));
 
             existingService.setTypeService(serviceDTO.getTypeService());
             existingService.setCapacity(serviceDTO.getCapacity());
@@ -91,18 +91,17 @@ public class ServicesService implements IServicesService {
     }
 
     @Override
-    public List<ServiceResponseDTO> getServiceforEvent(Long eventId){
+    public List<ServiceResponseDTO> getServiceforEvent(Long eventId) {
         Event event = eventService.findEvent(eventId);
         List<Services> serviceses = serviceRepository.findByEvent(event);
         return serviceses.stream()
-        .map(services -> new ServiceResponseDTO(
-            services.getIdService(),
-            services.getTypeService(),
-            services.getCapacity(),
-            services.getCost(),
-            services.getDescription(),
-            services.getEvent()
+                .map(services -> new ServiceResponseDTO(
+                services.getIdService(),
+                services.getTypeService(),
+                services.getCapacity(),
+                services.getCost(),
+                services.getDescription(),
+                services.getEvent()
         )).collect(Collectors.toList());
     }
 }
-

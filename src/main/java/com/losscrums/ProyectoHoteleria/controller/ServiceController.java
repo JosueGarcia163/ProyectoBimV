@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.losscrums.ProyectoHoteleria.DTO.ServiceResponseDTO;
 import com.losscrums.ProyectoHoteleria.DTO.ServiceSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Services;
-import com.losscrums.ProyectoHoteleria.service.EventService;
 import com.losscrums.ProyectoHoteleria.service.ServicesService;
 
 import jakarta.validation.Valid;
@@ -36,8 +36,6 @@ public class ServiceController {
     @Autowired
     ServicesService servicesService;
     
-    @Autowired
-    EventService eventService;
 
     @GetMapping("/{eventId}")
     public ResponseEntity<?> getServiceforEvent(@PathVariable Long eventId){
@@ -75,9 +73,9 @@ public class ServiceController {
         }
         try {
             Services services = servicesService.saveServices(serviceDTO);
-            res.put("message", "Reservacion guardada exitosamente");
+            res.put("message", "Servicio guardado exitosamente");
             res.put("reservation", services);
-            return ResponseEntity.badRequest().body(res);
+            return ResponseEntity.ok(res);
         } catch (Exception err) {
             res.put("message", "Error al guardar el servicio, intente de nevo mas tarde");
             res.put("error", err.getMessage());
@@ -129,7 +127,7 @@ public class ServiceController {
         }
     }
     
-    @GetMapping("/put/{idService}")
+    @PutMapping("/put/{idService}")
     public ResponseEntity<?> updateService(
         //Recibe el ID del servicio en la URL
         @PathVariable Long idService,
@@ -182,3 +180,4 @@ public class ServiceController {
             }
         }
 }
+

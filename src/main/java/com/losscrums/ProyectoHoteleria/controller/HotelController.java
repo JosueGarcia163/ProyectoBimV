@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.losscrums.ProyectoHoteleria.DTO.HotelDTO;
+import com.losscrums.ProyectoHoteleria.DTO.HotelSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
 import com.losscrums.ProyectoHoteleria.service.CloudinaryService;
 import com.losscrums.ProyectoHoteleria.service.HotelService;
@@ -30,7 +30,7 @@ import com.losscrums.ProyectoHoteleria.service.HotelService;
 import jakarta.validation.Valid;
 
 @RestController // Implementa @Controller @ResponseBody
-@RequestMapping("/hoteleria/v1/auth") // Ruta general
+@RequestMapping("/hoteleria/v1/hotel") // Ruta general
 public class HotelController {
 
     @Autowired
@@ -45,7 +45,7 @@ public class HotelController {
      * Metodo para listar usuarios
      * @return ResponseEntity con las diferentes 
      */
-    @GetMapping("/list/hotel")
+    @GetMapping("/list")
     public ResponseEntity<?> listHotel() {
         Map<String, Object> res = new HashMap<>();
 
@@ -73,7 +73,7 @@ public class HotelController {
         }
     }
 
-    @GetMapping("/list/hotel/{id}")
+    @GetMapping("/list/{id}")
     public ResponseEntity<?> getHotel(@PathVariable long id) {
         Map<String, Object> res = new HashMap<>();
 
@@ -101,13 +101,13 @@ public class HotelController {
         }
     }
 
-    @PostMapping("/post/hotel")
+    @PostMapping("/post")
     public ResponseEntity<?> postHotel(@RequestPart("profilePicture") MultipartFile profilePicture,
             // Multipart-formadata
             //@Valid ejecuta todas las validaciones del modelo DTO
             //RequestBody para el JSON / ModelAttribute para archivos tambien.
 
-            @Valid @ModelAttribute HotelDTO hotel,
+            @Valid @ModelAttribute HotelSaveDTO hotel,
             //BindingResult captura los errores si en tal caso no pasa las validaciones.
             BindingResult result
     ) {
@@ -132,7 +132,7 @@ public class HotelController {
             Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(profilePicture,
                     "profilesHotel");
 
-            String urlProfilePicture = uploadResult.get("url").toString();
+          
             String img = uploadResult.get("url").toString();
             Long id = null;
             Hotel newHotel = new Hotel(id, hotel.getName(), hotel.getAddress(), hotel.getNumStars(), hotel.getComfort(), img);
@@ -150,7 +150,7 @@ public class HotelController {
     }
 
     //Creamos el metodo de editar hotel
-    @PutMapping("/put/hotel/{id}")
+    @PutMapping("/put/{id}")
     //Utilizamos la clase reponseEntity el cual espera un valor.
     public ResponseEntity<?> editHotel(
             //Esperamos la id para buscar el que vamos a editar
@@ -164,7 +164,7 @@ public class HotelController {
              * debe ser enlazado con los datos del formulario en la solicitud del multipart.
              * 
              */
-            @Valid @ModelAttribute HotelDTO hotel,
+            @Valid @ModelAttribute HotelSaveDTO hotel,
             /* Es una interfaz que se usa para capturar y manejar los errores de validación que pueden ocurrir 
             durante el proceso de enlace de datos.  */
             BindingResult result
@@ -220,7 +220,7 @@ public class HotelController {
     }
 
     //Se crea el metodo de eliminar hotel.
-    @DeleteMapping("/delete/hotel/{id}")
+    @DeleteMapping("/delete/{id}")
     // Se utiliza la clase response entity con la clase Hash map para devolver un String y un objeto.
     public ResponseEntity<Map<String, Object>> deleteHotel(
             // Se espera el id para que se pueda buscar el que se va a eliminar.    

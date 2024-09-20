@@ -2,6 +2,7 @@ package com.losscrums.ProyectoHoteleria.service.IService;
 
 import java.util.List;
 
+import com.losscrums.ProyectoHoteleria.DTO.RoomResponseDTO;
 import com.losscrums.ProyectoHoteleria.model.Room;
 
 public interface IRoomService {
@@ -10,13 +11,13 @@ public interface IRoomService {
 
     Room findRoom(Long id);
 
-    Room saveRoom(Room habitacion);
+    Room saveRoom(Room room);
 
-    public void deleteRoom(Room habitacion);
+    public void deleteRoom(Room room);
 
-    //List<Habitacion> findByRoomType(String roomType);
+    //Creamos el metodo en la interfaz que nos permite listar room por id de hotel.
+    List<RoomResponseDTO> getRoomforHotel(Long hotelId);
 
-    //List<Habitacion> findAvailable(Boolean availability);
-
-    //List<Habitacion> findByCapacity(String capacity);
+    //Creamos el metodo en la interfaz que nos permite listar room por id de evento.
+    List<RoomResponseDTO> getRoomforEvent(Long eventId);
 }
