@@ -18,19 +18,19 @@ VALUES ('Pedro', 'Ramírez', 'pedroram', 'pedro.ramirez@example.com', 'password6
 
 -- Insertar reservacion.
 INSERT INTO reservation (start, end, cost, status, user_id_user)
-VALUES ('2024-10-01 14:00:00', '2024-10-01 16:00:00', '100.00', 'PROCESS', 1);
+VALUES ('2024-10-01 14:00:00', '2024-10-01 16:00:00', '100.00', 'PROCESS', 5);
 
 INSERT INTO reservation (start, end, cost, status, user_id_user)
-VALUES ('2024-11-05 10:00:00', '2024-11-05 12:00:00', '150.00', 'PROCESS', 2);
+VALUES ('2024-11-05 10:00:00', '2024-11-05 12:00:00', '150.00', 'PROCESS', 4);
 
 INSERT INTO reservation (start, end, cost, status, user_id_user)
 VALUES ('2024-12-12 18:00:00', '2024-12-12 20:00:00', '200.00', 'RESERVED', 3);
 
 INSERT INTO reservation (start, end, cost, status, user_id_user)
-VALUES ('2024-09-30 09:00:00', '2024-09-30 11:00:00', '120.00', 'RESERVED', 4);
+VALUES ('2024-09-30 09:00:00', '2024-09-30 11:00:00', '120.00', 'RESERVED', 2);
 
 INSERT INTO reservation (start, end, cost, status, user_id_user)
-VALUES ('2024-10-15 15:00:00', '2024-10-15 17:00:00', '180.00', 'CANCELED', 5);
+VALUES ('2024-10-15 15:00:00', '2024-10-15 17:00:00', '180.00', 'CANCELED', 1);
 
 -- Insertar hotel.
 INSERT INTO hotel (name, address, num_stars, comfort ) 
@@ -125,7 +125,8 @@ VALUES ('Servicio de catering', 100, 200.00, 'Catering para eventos especiales',
 
 
 
- 
+select * from user;
+select * from reservation;
 select * from hotel;
 select * from room;
 select * from event;	

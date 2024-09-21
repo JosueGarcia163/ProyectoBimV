@@ -12,13 +12,16 @@ public interface IReservationService {
     List<ReservationResponseDTO> findAll();
 
     // Method to find a reservation by its ID
-    public Reservation findById(Long id); 
+    ReservationResponseDTO findById(Long id);
+
+    //Metodo encontrar para poder dar funcionalidad de eliminar.
+    Reservation find(Long id);
 
     // Method to save a reservation
     Reservation save(ReservationSaveDTO reservation);
 
     // Method to delete a reservation by ID
-    void delete(Reservation reservation);
+    public void delete(Reservation reservation);
 
     // Method to find reservations by user
     List<ReservationResponseDTO> findByUser(long userId);

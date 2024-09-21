@@ -35,8 +35,12 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public Reservation findById(Long id) {
-        return reservationRepository.findById(id).orElse(null);
+    public ReservationResponseDTO findById(Long id) {
+        //Almacena lo que encontro en el repositorio en base al id.
+        Reservation reservation = reservationRepository.findById(id).orElse(null);
+
+        // Convierte la reserva en un DTO usando el método responseDTO
+        return responseDTO(reservation);
     }
 
     @Override
@@ -46,7 +50,7 @@ public class ReservationService implements IReservationService {
 
     @Override
     public void delete(Reservation reservation) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        reservationRepository.delete(reservation);
     }
 
     @Override
@@ -85,6 +89,11 @@ public class ReservationService implements IReservationService {
         );
 
         return dto;
+    }
+
+    @Override
+    public Reservation find(Long id) {
+        return reservationRepository.findById(id).orElse(null);
     }
 
 }
