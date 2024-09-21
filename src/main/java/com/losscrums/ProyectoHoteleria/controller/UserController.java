@@ -25,6 +25,11 @@ import com.losscrums.ProyectoHoteleria.service.UserService;
 
 import jakarta.validation.Valid;
 
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.losscrums.ProyectoHoteleria.DTO.UserLoginDTO;
+
+
 
 
 
@@ -60,7 +65,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("path")
+    @PostMapping("/post")
     public ResponseEntity<?> addUser(
         @RequestPart("personalImage") MultipartFile personalImage,
         @Valid @ModelAttribute UserSaveDTO user,
@@ -99,4 +104,24 @@ public class UserController {
             return ResponseEntity.internalServerError().body(res);
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserLoginDTO user){
+        Map<String, Object> res = new HashMap<>();
+        try {
+            System.out.println(user.getPassword());
+            if(userService.login(user.getUsername(), user.getPassword())){
+                res.put("message", "Usuario logeado correctamente");
+                return ResponseEntity.ok(res);
+            }else{
+                res.put("message", "Credenciales incorrectas, verifica la contraseña o email");
+                return ResponseEntity.status(401).body(res);
+            }
+        } catch (Exception err) {
+            res.put("message", "Error general al iniciar sesión");
+            res.put("error", err);
+            return ResponseEntity.internalServerError().body(res);
+        }
+    }
+    
 }
