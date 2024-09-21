@@ -2,7 +2,6 @@ package com.losscrums.ProyectoHoteleria.DTO;
 
 import java.sql.Timestamp;
 
-import com.losscrums.ProyectoHoteleria.model.User;
 import com.losscrums.ProyectoHoteleria.utils.Status;
 
 import lombok.AllArgsConstructor;
@@ -19,6 +18,6 @@ public class ReservationResponseDTO {
     private Timestamp end;
     private String cost;
     private Status status;
-    private User user;
+    private UserClearDTO user;
 
 }
