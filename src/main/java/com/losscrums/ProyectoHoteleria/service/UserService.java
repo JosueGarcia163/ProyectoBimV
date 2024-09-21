@@ -25,9 +25,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User findUserById(Long id) {
+    public User findUserById(Long idUser) {
         // Buscar usuario por ID, retornar null si no se encuentra
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(idUser).orElse(null);
     }
 
     @Override
