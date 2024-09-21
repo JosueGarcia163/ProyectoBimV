@@ -12,7 +12,7 @@ public interface IReservationService {
     List<ReservationResponseDTO> findAll();
 
     // Method to find a reservation by its ID
-    public Reservation findById(Long id);   
+    public Reservation findById(Long id); 
 
     // Method to save a reservation
     Reservation save(ReservationSaveDTO reservation);

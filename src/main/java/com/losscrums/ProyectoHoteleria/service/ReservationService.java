@@ -36,7 +36,7 @@ public class ReservationService implements IReservationService {
 
     @Override
     public Reservation findById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return reservationRepository.findById(id).orElse(null);
     }
 
     @Override
