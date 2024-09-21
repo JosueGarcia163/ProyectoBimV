@@ -10,7 +10,7 @@ public interface IUserService {
     public List<User> listUsers();
 
     // Método para buscar un usuario por su ID
-    public User findUserById(Long id);
+    public User findUserById(Long idUser);
 
     // Método para guardar un usuario
     public User saveUser(User user);
@@ -23,6 +23,6 @@ public interface IUserService {
 
    // public Event editUser(Long idUser, UserSaveDTO userDTO);
 
-
+    boolean login(String username, String password);
 
 }
