@@ -29,6 +29,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.losscrums.ProyectoHoteleria.DTO.UserLoginDTO;
 
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+
 
 
 
@@ -124,4 +128,52 @@ public class UserController {
         }
     }
     
+    @PutMapping("put/{id}")
+    public ResponseEntity<?> editUser(
+        @PathVariable long idUser,
+        @RequestPart("personalImage") MultipartFile personalImage,
+        @Valid @ModelAttribute UserSaveDTO user,
+        BindingResult result
+    ){
+        Map<String, Object> res = new HashMap<>();
+        if(result.hasErrors()){
+            List<String> errors = result.getFieldErrors()
+            .stream()
+            .map(error -> error.getDefaultMessage())
+            .collect(Collectors.toList());
+            res.put("message", "Error en las validaciones. Por favor ingresa todos los campos");
+            res.put("Errors", errors);
+            return ResponseEntity.badRequest().body(res);
+        }
+        
+        try {
+            User existingUser = userService.findUserById(idUser);
+            if(existingUser == null){
+                res.put("message", "No se encontro el usuario con el ID proporcionado");
+                return ResponseEntity.internalServerError().body(res);
+            }
+
+            String img;
+            if(!personalImage.isEmpty()){
+                Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(personalImage, "profileHoteleria");
+                img = uploadResult.get("url").toString();
+            } else{
+                img = existingUser.getPersonalImage();
+            }
+            existingUser.setName(user.getName());
+            existingUser.setSurname(user.getSurname());
+            existingUser.setUsername(user.getUsername());
+            existingUser.setEmail(user.getEmail());
+            existingUser.setPassword(user.getPassword());
+            existingUser.setNit(user.getNit());
+            existingUser.setPersonalImage(img);
+            userService.saveUser(existingUser);
+            res.put("message", "Usuario actualizado correctamente");
+            return ResponseEntity.ok(res);
+        }catch (Exception err) {
+            res.put("Message", "Error general al obtener datos");
+            res.put("Error", err.getMessage());
+            return ResponseEntity.internalServerError().body(res);
+        }
+    }
 }
