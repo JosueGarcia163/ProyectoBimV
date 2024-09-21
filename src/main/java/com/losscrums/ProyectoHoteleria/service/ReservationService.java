@@ -5,8 +5,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.losscrums.ProyectoHoteleria.DTO.ReservationResponseDTO;
+import com.losscrums.ProyectoHoteleria.DTO.ReservationSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Reservation;
-import com.losscrums.ProyectoHoteleria.model.User;
 import com.losscrums.ProyectoHoteleria.repository.ReservationRepository;
 import com.losscrums.ProyectoHoteleria.service.IService.IReservationService;
 
@@ -27,18 +28,25 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public Reservation save(Reservation reservation) {
-        return reservationRepository.save(reservation);
+    public Reservation save(ReservationSaveDTO reservation) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void deleteById(Long id) {
-        reservationRepository.deleteById(id);
+    public void deleteById(Reservation reservation) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<Reservation> findByUser(User user) {
-        return reservationRepository.findByUser(user);
+    public List<ReservationResponseDTO> findByUser(long userId) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public Reservation editReservation(Long idReservation, ReservationSaveDTO reservationDTO) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    
 }
 
