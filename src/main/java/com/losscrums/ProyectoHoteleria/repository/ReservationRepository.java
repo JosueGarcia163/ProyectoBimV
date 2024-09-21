@@ -12,3 +12,4 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     // Custom query method to find reservations by user
     List<Reservation> findByUser(User user);
 }
+

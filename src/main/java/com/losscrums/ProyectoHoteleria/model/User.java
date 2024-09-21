@@ -1,5 +1,4 @@
 package com.losscrums.ProyectoHoteleria.model;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,7 +19,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idUser;
     
     @NotBlank
     private String name;
@@ -29,7 +28,7 @@ public class User {
     private String surname;
 
     @NotBlank
-    @Column(unique =true)
+    @Column(unique = true)
     private String username;
 
     @Email
@@ -39,12 +38,10 @@ public class User {
 
     @NotBlank
     private String password;
-    private String profilePicture;
 
     @NotNull
     private Long nit;
 
-    @NotBlank
     private String personalImage;
     
 }

@@ -1,18 +1,18 @@
 package com.losscrums.ProyectoHoteleria.model;
-
 import java.sql.Timestamp;
 
 import com.losscrums.ProyectoHoteleria.utils.Status;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,22 +25,23 @@ public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idReservation;
 
-    @Column(nullable = false)
+    @NotNull
+    @FutureOrPresent
     private Timestamp start;
 
-    @Column(nullable = false)
+    @NotNull
+    @FutureOrPresent
     private Timestamp end;
 
-    @Column(nullable = false)
+    @NotBlank
     private String cost;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Status status;
 
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

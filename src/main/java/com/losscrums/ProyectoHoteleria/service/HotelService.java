@@ -16,24 +16,24 @@ public class HotelService implements IHotelService {
     private HotelRepository hotelRepository;
 
     @Override
-    public List<Hotel> listarHoteles() {
+    public List<Hotel> listHotel() {
         return hotelRepository.findAll();
     }
 
     @Override
-    public Hotel buscarHotel(Long id) {
+    public Hotel findHotel(Long id) {
         // Buscar hotel por ID, si no se encuentra retorna null
         return hotelRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Hotel guardarHotel(Hotel hotel) {
+    public Hotel saveHotel(Hotel hotel) {
         // Guardar o actualizar un hotel
         return hotelRepository.save(hotel);
     }
 
     @Override
-    public void eliminarHotel(Hotel hotel) {
+    public void deleteHotel(Hotel hotel) {
         // Eliminar un hotel
         hotelRepository.delete(hotel);
     }

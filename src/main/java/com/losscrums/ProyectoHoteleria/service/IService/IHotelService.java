@@ -9,17 +9,19 @@ public interface IHotelService {
 
 
     // Método para listar todos los hoteles
-    public List<Hotel> listarHoteles();
+    public List<Hotel> listHotel();
     
     // Método para buscar un hotel por su ID
-    public Hotel buscarHotel(Long id);
+    public Hotel findHotel(Long id);
     
     // Método para guardar un hotel
-    public Hotel guardarHotel(Hotel hotel);
+    public Hotel saveHotel(Hotel hotel);
     
     // Método para eliminar un hotel
-    public void eliminarHotel(Hotel hotel);
+    public void deleteHotel(Hotel hotel);
 
 }
+
+
 
 

@@ -1,51 +1,40 @@
 package com.losscrums.ProyectoHoteleria.model;
 
-import java.sql.Timestamp;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Event {
+@Data
+public class Room {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idEvent; // Identificador único para cada evento
-
-    // Tipo de evento
+    private Long idRoom;
     @NotBlank
-    private String eventType;
-
-    // Nombre del evento
+    private String roomType;
     @NotBlank
-    private String name;
-
-    // Costo del evento
+    private String capacity;
+    @NotBlank
+    private String availability;
+    @NotBlank
+    private String availabilityDate;
     @NotNull
-    private double cost;
-
-    // Fecha de inicio del evento
-    @NotNull
-    @FutureOrPresent
-    private Timestamp dateStart;
-
-    // Fecha de finalización del evento
-    @NotNull
-    @FutureOrPresent
-    private Timestamp dateFinish;
-
-    // Relación ManyToOne con Hotel
     @ManyToOne
     private Hotel hotel;
+    @NotNull
+    //Esto nos permite conectar una unica habitacion a un unico evento.
+    @OneToOne
+    private Event event;
+
 }
