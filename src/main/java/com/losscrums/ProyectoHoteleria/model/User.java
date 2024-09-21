@@ -1,5 +1,6 @@
 package com.losscrums.ProyectoHoteleria.model;
 
+import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class User {
 
     @Id
-    @GeneratedValue(strtegy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     @NotBlank
@@ -40,7 +41,7 @@ public class User {
     private String password;
     private String profilePicture;
 
-    @NotNull
+    @NonNull
     private Long nit;
 
     @NotBlank
