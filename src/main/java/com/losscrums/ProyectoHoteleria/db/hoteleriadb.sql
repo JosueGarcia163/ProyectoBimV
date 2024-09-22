@@ -83,24 +83,24 @@ VALUES
 ('Party', 'party', 250.00, '2024-12-31 20:00:00', '2025-01-01 01:00:00', 4);
 
 -- Insertar room 1.
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
-VALUES ('Suite', '2 personas', 'Disponible', '2024-09-15', 2,5);
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event, reservation_id_reservation) 
+VALUES ('Suite', '2 personas', 'Disponible', '2024-09-15', 2,5,4);
  
 -- Insertar room 2.
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
-VALUES ('Doble', '2 personas', 'No Disponible', '2024-09-16', 1,4);
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event, reservation_id_reservation) 
+VALUES ('Doble', '2 personas', 'No Disponible', '2024-09-16', 1,4,3);
  
 -- Insertar room 3.
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
-VALUES ('Individual', '1 persona', 'Disponible', '2024-09-17', 3,3);
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event, reservation_id_reservation) 
+VALUES ('Individual', '1 persona', 'Disponible', '2024-09-17', 3,3,2);
  
 -- Insertar room 4.
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
-VALUES ('Familiar', '4 personas', 'Disponible', '2024-09-18', 4,2);
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event, reservation_id_reservation) 
+VALUES ('Familiar', '4 personas', 'Disponible', '2024-09-18', 4,2,5);
  
 -- Insertar room 5.
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
-VALUES ('Suite', '2 personas', 'No Disponible', '2024-09-19', 5,1);
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event, reservation_id_reservation) 
+VALUES ('Suite', '2 personas', 'No Disponible', '2024-09-19', 5,1,1);
  
 -- Insertar services
 INSERT INTO services (type_service, capacity, cost, description, event_id_event)
@@ -128,6 +128,6 @@ VALUES ('Servicio de catering', 100, 200.00, 'Catering para eventos especiales',
 select * from user;
 select * from reservation;
 select * from hotel;
-select * from room;
+select * from room;	
 select * from event;	
 select * from services;

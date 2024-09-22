@@ -2,7 +2,6 @@ package com.losscrums.ProyectoHoteleria.DTO;
 
 import com.losscrums.ProyectoHoteleria.model.Event;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
-import com.losscrums.ProyectoHoteleria.model.Reservation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,5 +20,5 @@ public class RoomResponseDTO {
     private String availabilityDate;
     private Hotel hotelId;
     private Event eventId;
-    private Reservation reservationId;
+    private long reservationId;
 }

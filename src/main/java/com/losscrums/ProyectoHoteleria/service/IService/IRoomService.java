@@ -7,9 +7,11 @@ import com.losscrums.ProyectoHoteleria.model.Room;
 
 public interface IRoomService {
 
-    List<Room> listRoom();
+    List<RoomResponseDTO> listRoom();
 
     Room findRoom(Long id);
+
+    RoomResponseDTO findRoomById(long id);
 
     Room saveRoom(Room room);
 

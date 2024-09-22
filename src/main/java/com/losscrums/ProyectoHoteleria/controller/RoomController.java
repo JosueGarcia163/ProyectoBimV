@@ -133,8 +133,8 @@ public class RoomController {
         Map<String, Object> res = new HashMap<>();
         // La inyeccion de la depencia del servicio de habitaciones
         try{
-            Room habitacion = roomService.findRoom(id);
-            return ResponseEntity.ok().body(habitacion);
+            RoomResponseDTO room = roomService.findRoomById(id);
+            return ResponseEntity.ok().body(room);
         // Aqui capturas posibles errores
         } catch (CannotCreateTransactionException err) {
             res.put("Message", "Error al momento de conectarse a la db");
