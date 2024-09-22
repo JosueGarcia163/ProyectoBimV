@@ -12,25 +12,22 @@ import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.losscrums.ProyectoHoteleria.DTO.UserLoginDTO;
 import com.losscrums.ProyectoHoteleria.DTO.UserSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.User;
 import com.losscrums.ProyectoHoteleria.service.CloudinaryService;
 import com.losscrums.ProyectoHoteleria.service.UserService;
 
 import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.RequestBody;
-
-import com.losscrums.ProyectoHoteleria.DTO.UserLoginDTO;
-
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 
@@ -128,7 +125,7 @@ public class UserController {
         }
     }
     
-    @PutMapping("put/{id}")
+    @PutMapping("put/{idUser}")
     public ResponseEntity<?> editUser(
         @PathVariable long idUser,
         @RequestPart("personalImage") MultipartFile personalImage,
@@ -176,4 +173,25 @@ public class UserController {
             return ResponseEntity.internalServerError().body(res);
         }
     }
+
+    @GetMapping("/list/{idUser}")
+    public ResponseEntity<?> getUserId(@PathVariable long idUser){
+        Map<String, Object> res = new HashMap<>();
+        try{
+            User user = userService.findUserById(idUser);
+            return ResponseEntity.ok().body(user);
+        } catch (CannotCreateTransactionException err) {
+            res.put("Message", "Error al momento de conectarse a la db");
+            res.put("Error", err.getMessage().concat(err.getMostSpecificCause().getMessage()));
+            return ResponseEntity.status(503).body(res);    
+        } catch (DataAccessException err) {
+            res.put("Message", "Error al momento de consultar a la db");
+            res.put("Error", err.getMessage().concat(err.getMostSpecificCause().getMessage()));
+            return ResponseEntity.status(503).body(res);
+        } catch (Exception err) {
+            res.put("Message", "Error general al obtener datos.");
+            res.put("Error", err.getMessage());
+            return ResponseEntity.internalServerError().body(res);
+        }
+    } 
 }
