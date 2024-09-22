@@ -25,4 +25,6 @@ public class RoomSaveDTO {
     private Long hotelId;
     @NotNull(message = "No se seleccionó un Evento a reservar")
     private Long eventId;
+    @NotNull(message = "No se seleccionó una Reservacion a reservar")
+    private Long reservationId;
 }

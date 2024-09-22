@@ -20,13 +20,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.losscrums.ProyectoHoteleria.DTO.RoomSaveDTO;
 import com.losscrums.ProyectoHoteleria.DTO.RoomResponseDTO;
+import com.losscrums.ProyectoHoteleria.DTO.RoomSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Event;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
+import com.losscrums.ProyectoHoteleria.model.Reservation;
 import com.losscrums.ProyectoHoteleria.model.Room;
 import com.losscrums.ProyectoHoteleria.service.EventService;
 import com.losscrums.ProyectoHoteleria.service.HotelService;
+import com.losscrums.ProyectoHoteleria.service.ReservationService;
 import com.losscrums.ProyectoHoteleria.service.RoomService;
 
 import jakarta.validation.Valid;
@@ -45,6 +47,9 @@ public class RoomController {
 
     @Autowired
     EventService eventService;
+
+    @Autowired
+    ReservationService reservationService;
 
     // Rutas especificas para cada fumcion del programa
 
@@ -99,8 +104,10 @@ public class RoomController {
         try {
             //utilizamos los atributos del bean DTO de habitaciones
             Long id = null;
+            //Buscamos los id de cada entidad para poder guardarla.
             Hotel hotel = hotelService.findHotel(room.getHotelId());
             Event event = eventService.findEvent(room.getEventId());
+            Reservation reservation = reservationService.find(room.getReservationId());
             Room newRoom = new Room(
                 id,
                 room.getRoomType(),
@@ -108,7 +115,8 @@ public class RoomController {
                 room.getAvailability(),
                 room.getAvailabilityDate(),
                 hotel,
-                event
+                event,
+                reservation
             );
             roomService.saveRoom(newRoom);
             res.put("message", "Habitacion recibida correctamente");
@@ -178,11 +186,14 @@ public class RoomController {
             existingHabitacion.setCapacity(room.getCapacity());
             existingHabitacion.setAvailability(room.getAvailability());
             existingHabitacion.setAvailabilityDate(room.getAvailabilityDate());
-            //Creamos el set para modificar la llave foranea de room osea hotelId.
+            //Creamos el set para modificar la llave foranea de room osea hotelId, eventId, reservationId.
             Hotel hotel = hotelService.findHotel(room.getHotelId());
             Event event = eventService.findEvent(room.getEventId());
+            Reservation reservation = reservationService.find(room.getReservationId());
+
             existingHabitacion.setHotel(hotel);
             existingHabitacion.setEvent(event);
+            existingHabitacion.setReservation(reservation);
             // Se guarda los cambios en el servicio den habitacion
             
             roomService.saveRoom(existingHabitacion);
@@ -268,4 +279,26 @@ public class RoomController {
             return ResponseEntity.internalServerError().body(res);
         }
     }
+
+    //Funcion para encontrar habitacion por Id Reservacion.
+    @GetMapping("/reservation/{reservationId}")
+    public ResponseEntity<?> getRoomforReservation(@PathVariable Long reservationId) {
+        Map<String, Object> res = new HashMap<>();
+        try {
+            List<RoomResponseDTO> roomSaveDTOs = roomService.getRoomforReservation(reservationId);
+            //Validacion, si no encuentra nada por medio del Id.
+            if (roomSaveDTOs == null || roomSaveDTOs.isEmpty()) {
+                res.put("message", "Aún no tienes eventos creados");
+                return ResponseEntity.status(404).body(res);
+            } else {
+                return ResponseEntity.ok(roomSaveDTOs);
+            }
+        } catch (Exception err) {
+            res.put("message", "Error general al obtener los datos");
+            res.put("error", err);
+            return ResponseEntity.internalServerError().body(res);
+        }
+    }
+
+    
 }

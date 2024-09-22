@@ -36,5 +36,8 @@ public class Room {
     //Esto nos permite conectar una unica habitacion a un unico evento.
     @OneToOne
     private Event event;
+    //Muchos cuartos se pueden reservar en una reservacion.
+    @ManyToOne
+    private Reservation reservation;
 
 }

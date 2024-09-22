@@ -20,4 +20,5 @@ public class ReservationResponseDTO {
     private Status status;
     private UserClearDTO user;
 
+
 }
