@@ -1,5 +1,6 @@
 package com.losscrums.ProyectoHoteleria.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,8 +45,28 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public Reservation save(ReservationSaveDTO reservation) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Reservation save(ReservationSaveDTO reservationDTO) {
+        try {
+            //Convertir la fecha que llega en STRING (LocalDateTime) a TIMESTAMP
+            Timestamp startDate = Timestamp.valueOf(reservationDTO.getStart());
+            //Convertir la fecha que llega en STRING (LocalDateTime) a TIMESTAMP
+            Timestamp endDate = Timestamp.valueOf(reservationDTO.getEnd());
+
+            //Buscamos una reservacion en base al id de user.
+            User user = userService.findUserById(reservationDTO.getUserId());
+
+            Reservation reservation = new Reservation(
+                    null,
+                    startDate,
+                    endDate,
+                    reservationDTO.getCost(),
+                    reservationDTO.getStatus(),
+                    user
+            );
+            return reservationRepository.save(reservation);
+        } catch (Exception err) {
+            throw new IllegalArgumentException("Error al parsear las fechas", err);
+        }
     }
 
     @Override
@@ -63,8 +84,32 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
+    public Reservation find(Long id) {
+        return reservationRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public Reservation editReservation(Long idReservation, ReservationSaveDTO reservationDTO) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            // Buscar el reservation existente por su ID.
+            Reservation existingReservation = reservationRepository.findById(idReservation)
+                    .orElseThrow(() -> new IllegalArgumentException("Reservation no encontrada con el ID: " + idReservation));
+
+            // Actualizar los campos del reservation existente con los nuevos datos
+            existingReservation.setStart(Timestamp.valueOf(reservationDTO.getStart()));
+            existingReservation.setEnd(Timestamp.valueOf(reservationDTO.getEnd()));
+            existingReservation.setCost(reservationDTO.getCost());
+            existingReservation.setStatus(reservationDTO.getStatus());
+
+            // Buscar la reservation asociado y actualizar la reservation.
+            User user = userService.findUserById(reservationDTO.getUserId());
+            existingReservation.setUser(user);
+
+            // Guardar el reservation actualizado
+            return reservationRepository.save(existingReservation);
+        } catch (Exception err) {
+            throw new IllegalArgumentException("Error al editar el reservation", err);
+        }
     }
 
     /*Metodo que sirve para listar solamente los datos de las reservas y los datos especificos del usuario(sin mostar credenciales 
@@ -89,11 +134,6 @@ public class ReservationService implements IReservationService {
         );
 
         return dto;
-    }
-
-    @Override
-    public Reservation find(Long id) {
-        return reservationRepository.findById(id).orElse(null);
     }
 
 }

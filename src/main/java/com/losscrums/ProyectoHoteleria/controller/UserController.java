@@ -79,7 +79,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(res);
         }
         try {
-            Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(personalImage, "profileHoteleria");
+            Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(personalImage, "profilePersonalImage");
             String img = uploadResult.get("url").toString();
             Long idUser = null;
             User newUser = new User(
@@ -111,7 +111,7 @@ public class UserController {
                 res.put("message", "Usuario logeado correctamente");
                 return ResponseEntity.ok(res);
             }else{
-                res.put("message", "Credenciales incorrectas, verifica la contraseña o email");
+                res.put("message", "Credenciales incorrectas, verifica la contraseña o username");
                 return ResponseEntity.status(401).body(res);
             }
         } catch (Exception err) {
@@ -148,7 +148,7 @@ public class UserController {
 
             String img;
             if(!personalImage.isEmpty()){
-                Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(personalImage, "profileHoteleria");
+                Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(personalImage, "profilePersonalImage");
                 img = uploadResult.get("url").toString();
             } else{
                 img = existingUser.getPersonalImage();
