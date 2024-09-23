@@ -20,4 +20,5 @@ public class RoomResponseDTO {
     private String availabilityDate;
     private Hotel hotelId;
     private Event eventId;
+    private long reservationId;
 }

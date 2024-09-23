@@ -1,11 +1,14 @@
 package com.losscrums.ProyectoHoteleria.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.losscrums.ProyectoHoteleria.DTO.HotelResponseDTO;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
+import com.losscrums.ProyectoHoteleria.model.Reservation;
 import com.losscrums.ProyectoHoteleria.repository.HotelRepository;
 import com.losscrums.ProyectoHoteleria.service.IService.IHotelService;
 
@@ -14,6 +17,9 @@ public class HotelService implements IHotelService {
 
     @Autowired
     private HotelRepository hotelRepository;
+
+    @Autowired
+    private ReservationService reservationService;
 
     @Override
     public List<Hotel> listHotel() {
@@ -36,5 +42,21 @@ public class HotelService implements IHotelService {
     public void deleteHotel(Hotel hotel) {
         // Eliminar un hotel
         hotelRepository.delete(hotel);
+    }
+
+    @Override
+    public List<HotelResponseDTO> getHotelforReservation(long reservationId){
+        Reservation reservation = reservationService.find(reservationId);
+        List<Hotel> hotels = hotelRepository.findByReservation(reservation);
+        return hotels.stream()
+        .map(hotel -> new HotelResponseDTO(
+            hotel.getIdHotel(),
+            hotel.getName(),
+            hotel.getAddress(),
+            hotel.getNumStars(),
+            hotel.getComfort(),
+            hotel.getProfilePicture(),
+            hotel.getReservation().getIdReservation()
+        )).collect(Collectors.toList());
     }
 }

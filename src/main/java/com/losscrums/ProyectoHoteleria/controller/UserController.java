@@ -7,11 +7,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,10 +28,6 @@ import com.losscrums.ProyectoHoteleria.service.CloudinaryService;
 import com.losscrums.ProyectoHoteleria.service.UserService;
 
 import jakarta.validation.Valid;
-
-
-
-
 
 
 @RestController
@@ -85,7 +79,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(res);
         }
         try {
-            Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(personalImage, "profileHoteleria");
+            Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(personalImage, "profilePersonalImage");
             String img = uploadResult.get("url").toString();
             Long idUser = null;
             User newUser = new User(
@@ -117,7 +111,7 @@ public class UserController {
                 res.put("message", "Usuario logeado correctamente");
                 return ResponseEntity.ok(res);
             }else{
-                res.put("message", "Credenciales incorrectas, verifica la contraseña o email");
+                res.put("message", "Credenciales incorrectas, verifica la contraseña o username");
                 return ResponseEntity.status(401).body(res);
             }
         } catch (Exception err) {
@@ -154,7 +148,7 @@ public class UserController {
 
             String img;
             if(!personalImage.isEmpty()){
-                Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(personalImage, "profileHoteleria");
+                Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(personalImage, "profilePersonalImage");
                 img = uploadResult.get("url").toString();
             } else{
                 img = existingUser.getPersonalImage();
@@ -195,33 +189,6 @@ public class UserController {
             res.put("Error", err.getMessage());
             return ResponseEntity.internalServerError().body(res);
         }
-    }
-
-    @DeleteMapping("/delete/{idUser}")
-    public ResponseEntity<Map<String, Object>> deleteUser(
-        @PathVariable long idUser) {
-        Map<String, Object> res = new HashMap<>();
-        try {
-            // Busca el usuario en la base de datos
-            User existingUser = userService.findUserById(idUser);
-
-            // Verifica si el usuario realmente existe
-            if (existingUser == null) {
-                res.put("message", "No se encontró el usuario con la identificación proporcionada");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
-            }
-
-            // Elimina el usuario
-            userService.deleteUser(existingUser);
-            res.put("message", "Usuario eliminado correctamente");
-            res.put("success", true);
-            return ResponseEntity.ok(res);
-        } catch (Exception err) {
-            // Captura cualquier error que pueda ocurrir al eliminar el usuario
-            res.put("message", "Error al intentar eliminar el usuario");
-            res.put("error", err.getMessage());
-            res.put("success", false);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
-        }
-    }
+    } 
 }
+

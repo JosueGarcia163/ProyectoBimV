@@ -5,7 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,7 +19,7 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idRoom;
     @NotBlank
     private String roomType;
     @NotBlank
@@ -33,8 +32,11 @@ public class Room {
     @ManyToOne
     private Hotel hotel;
     @NotNull
-    //Esto nos permite conectar una unica habitacion a un unico evento.
-    @OneToOne
+    //Esto nos permite tener muchas habitaciones en un mismo evento.
+    @ManyToOne
     private Event event;
+    //Muchos cuartos se pueden reservar en una reservacion.
+    @ManyToOne
+    private Reservation reservation;
 
 }

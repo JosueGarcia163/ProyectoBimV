@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +18,7 @@ public class Hotel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Identificador único para cada hotel
+    private Long idHotel; // Identificador único para cada hotel
 
     @NotBlank
     // Nombre del hotel
@@ -33,6 +34,9 @@ public class Hotel {
 
     //No es obligatoria
     private String profilePicture;
+
+    @ManyToOne
+    private Reservation reservation;
     
 }
 

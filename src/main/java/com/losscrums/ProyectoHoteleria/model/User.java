@@ -28,7 +28,7 @@ public class User {
     private String surname;
 
     @NotBlank
-    @Column(unique =true)
+    @Column(unique = true)
     private String username;
 
     @Email
@@ -42,7 +42,6 @@ public class User {
     @NotNull
     private Long nit;
 
-    @NotBlank
     private String personalImage;
     
 }
