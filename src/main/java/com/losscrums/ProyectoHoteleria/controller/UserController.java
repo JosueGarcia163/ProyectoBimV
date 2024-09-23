@@ -7,9 +7,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -193,5 +195,33 @@ public class UserController {
             res.put("Error", err.getMessage());
             return ResponseEntity.internalServerError().body(res);
         }
-    } 
+    }
+
+    @DeleteMapping("/delete/{idUser}")
+    public ResponseEntity<Map<String, Object>> deleteUser(
+        @PathVariable long idUser) {
+        Map<String, Object> res = new HashMap<>();
+        try {
+            // Busca el usuario en la base de datos
+            User existingUser = userService.findUserById(idUser);
+
+            // Verifica si el usuario realmente existe
+            if (existingUser == null) {
+                res.put("message", "No se encontró el usuario con la identificación proporcionada");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+            }
+
+            // Elimina el usuario
+            userService.deleteUser(existingUser);
+            res.put("message", "Usuario eliminado correctamente");
+            res.put("success", true);
+            return ResponseEntity.ok(res);
+        } catch (Exception err) {
+            // Captura cualquier error que pueda ocurrir al eliminar el usuario
+            res.put("message", "Error al intentar eliminar el usuario");
+            res.put("error", err.getMessage());
+            res.put("success", false);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+        }
+    }
 }
