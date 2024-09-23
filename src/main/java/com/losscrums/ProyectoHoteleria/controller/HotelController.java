@@ -22,10 +22,13 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.losscrums.ProyectoHoteleria.DTO.HotelResponseDTO;
 import com.losscrums.ProyectoHoteleria.DTO.HotelSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
+import com.losscrums.ProyectoHoteleria.model.Reservation;
 import com.losscrums.ProyectoHoteleria.service.CloudinaryService;
 import com.losscrums.ProyectoHoteleria.service.HotelService;
+import com.losscrums.ProyectoHoteleria.service.ReservationService;
 
 import jakarta.validation.Valid;
 
@@ -38,6 +41,9 @@ public class HotelController {
 
     @Autowired
     CloudinaryService cloudinaryService;
+
+    @Autowired
+    ReservationService reservationService;
 
     // Rutas especificas
 
@@ -117,7 +123,7 @@ public class HotelController {
         if (result.hasErrors()) {
             //Obtenemos una lista de todos los errores de campo del BindingResult
             List<String> errors = result.getFieldErrors().
-            //Se crea un flujo de stream a partir de la lista de errores.
+                    //Se crea un flujo de stream a partir de la lista de errores.
                     stream().map(error -> error.getDefaultMessage()).
                     //Recolecta todos los mensajes de error de la lista.
                     collect(Collectors.toList());
@@ -132,10 +138,18 @@ public class HotelController {
             Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(profilePicture,
                     "profilesHotel");
 
-          
             String img = uploadResult.get("url").toString();
             Long id = null;
-            Hotel newHotel = new Hotel(id, hotel.getName(), hotel.getAddress(), hotel.getNumStars(), hotel.getComfort(), img);
+            Reservation reservation = reservationService.find(hotel.getReservationId());
+            Hotel newHotel = new Hotel(
+                    id,
+                    hotel.getName(),
+                    hotel.getAddress(),
+                    hotel.getNumStars(),
+                    hotel.getComfort(),
+                    img,
+                    reservation
+            );
             //Utiliza servicios de cloudinary para subir la imagen que manda el hotel.
             hotelService.saveHotel(newHotel);
             res.put("message", "hotel recibido correctamente.");
@@ -206,6 +220,10 @@ public class HotelController {
             existingHotel.setComfort(hotel.getComfort());
             existingHotel.setProfilePicture(img);
 
+            Reservation reservation = reservationService.find(hotel.getReservationId());
+
+            existingHotel.setReservation(reservation);
+
             // Se guardan los cambios en el hotelService
             hotelService.saveHotel(existingHotel);
 
@@ -249,6 +267,24 @@ public class HotelController {
             res.put("error", e.getMessage());
             res.put("success", false);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+        }
+    }
+
+    @GetMapping("/reservation/{reservationId}")
+    public ResponseEntity<?> getHotelforReservation(@PathVariable Long reservationId) {
+        Map<String, Object> res = new HashMap<>();
+        try {
+            List<HotelResponseDTO> hotelSaveDTOs = hotelService.getHotelforReservation(reservationId);
+            if (hotelSaveDTOs == null || hotelSaveDTOs.isEmpty()) {
+                res.put("message", "Aun no tienes reservaciones creadas");
+                return ResponseEntity.status(404).body(res);
+            } else {
+                return ResponseEntity.ok(hotelSaveDTOs);
+            }
+        } catch (Exception err) {
+            res.put("message", "Error general al obtener los datos");
+            res.put("error", err);
+            return ResponseEntity.internalServerError().body(res);
         }
     }
 

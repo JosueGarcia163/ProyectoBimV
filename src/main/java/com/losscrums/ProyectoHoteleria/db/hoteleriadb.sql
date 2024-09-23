@@ -16,6 +16,9 @@ VALUES ('Ana', 'Martínez', 'anamartinez', 'ana.martinez@example.com', 'password
 INSERT INTO user (name, surname, username, email, password, nit)
 VALUES ('Pedro', 'Ramírez', 'pedroram', 'pedro.ramirez@example.com', 'password654', 321654987);
 
+INSERT INTO user (name, surname, username, email, password, nit)
+VALUES ('Pedro', 'Ramírez', 'emilis', ' emily.ramirez@example.com', 'password654', 321654987);
+
 -- Insertar reservacion.
 INSERT INTO reservation (start, end, cost, status, user_id_user)
 VALUES ('2024-10-01 14:00:00', '2024-10-01 16:00:00', '100.00', 'PROCESS', 5);
@@ -32,25 +35,32 @@ VALUES ('2024-09-30 09:00:00', '2024-09-30 11:00:00', '120.00', 'RESERVED', 2);
 INSERT INTO reservation (start, end, cost, status, user_id_user)
 VALUES ('2024-10-15 15:00:00', '2024-10-15 17:00:00', '180.00', 'CANCELED', 1);
 
+INSERT INTO reservation (start, end, cost, status, user_id_user)
+VALUES ('2024-10-15 15:00:00', '2024-10-15 17:00:00', '200.00', 'RESERVED', 3);
+
+INSERT INTO reservation (start, end, cost, status, user_id_user)
+VALUES ('2024-10-15 15:00:00', '2024-10-15 17:00:00', '280.00', 'RESERVED', 4);
+
+
 -- Insertar hotel.
-INSERT INTO hotel (name, address, num_stars, comfort ) 
-VALUES ('Hotel Sol y Mar', 'Calle del Sol 123, Barcelona', 4, 'Confortable');
+INSERT INTO hotel (name, address, num_stars, comfort, reservation_id_reservation ) 
+VALUES ('Hotel Sol y Mar', 'Calle del Sol 123, Barcelona', 4, 'Confortable',5);
  
 -- Inserción 2
-INSERT INTO hotel (name, address, num_stars, comfort) 
-VALUES ('Gran Hotel Plaza', 'Avenida Central 456, Madrid', 5, 'Lujo');
+INSERT INTO hotel (name, address, num_stars, comfort, reservation_id_reservation) 
+VALUES ('Gran Hotel Plaza', 'Avenida Central 456, Madrid', 5, 'Lujo',4);
  
 -- Inserción 3
-INSERT INTO hotel (name, address, num_stars, comfort) 
-VALUES ('Hotel Costa Azul', 'Playa del Mar 789, Valencia', 3, 'Sencillo');
+INSERT INTO hotel (name, address, num_stars, comfort, reservation_id_reservation) 
+VALUES ('Hotel Costa Azul', 'Playa del Mar 789, Valencia', 3, 'Sencillo',3);
  
 -- Inserción 4
-INSERT INTO hotel (name, address, num_stars, comfort) 
-VALUES ('Hotel Montaña', 'Calle Alta 101, Granada', 4, 'Confortable');
+INSERT INTO hotel (name, address, num_stars, comfort, reservation_id_reservation) 
+VALUES ('Hotel Montaña', 'Calle Alta 101, Granada', 4, 'Confortable',2);
  
 -- Inserción 5
-INSERT INTO hotel (name, address, num_stars, comfort) 
-VALUES ('Hotel Luna', 'Avenida del Lago 202, Sevilla', 3, 'Sencillo');
+INSERT INTO hotel (name, address, num_stars, comfort, reservation_id_reservation) 
+VALUES ('Hotel Luna', 'Avenida del Lago 202, Sevilla', 3, 'Sencillo',1);
  
 
 -- Insertar evento 1
