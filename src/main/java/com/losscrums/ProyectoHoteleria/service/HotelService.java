@@ -59,4 +59,18 @@ public class HotelService implements IHotelService {
             hotel.getReservation().getIdReservation()
         )).collect(Collectors.toList());
     }
+
+    //Definimos la funcion de obtener hotel por medio de nombre.
+    public List<Hotel> getHotelsByName(String name) {
+        //Utilizamos la funcion que generamos en el repositorio para retornar un nombre de tipo String.
+        return hotelRepository.findByName(name);
+    }
+
+    // Método para listar hoteles ordenados por nameCounter
+    public List<Hotel> listHotelsOrderedByNameCounter() {
+        //Utilizamos la funcion que generamos en el repositorio.
+        return hotelRepository.findAllByOrderByNameCounterDesc();
+    }
+
+    
 }

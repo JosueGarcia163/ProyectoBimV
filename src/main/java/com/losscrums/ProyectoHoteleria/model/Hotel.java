@@ -37,6 +37,8 @@ public class Hotel {
 
     @OneToOne
     private Reservation reservation;
+
+    private int nameCounter;
     
 }
 

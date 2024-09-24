@@ -23,6 +23,12 @@ public interface IHotelService {
 
     List<HotelResponseDTO> getHotelforReservation(long reservationId);
 
+    //Creamos la lista que utilizaremos en el servicio para poder buscar por nombre.
+    public List<Hotel> getHotelsByName(String name);
+
+    //Creamos la funcion para listar por medio del contador.
+    public List<Hotel> listHotelsOrderedByNameCounter();
+
 }
 
 
