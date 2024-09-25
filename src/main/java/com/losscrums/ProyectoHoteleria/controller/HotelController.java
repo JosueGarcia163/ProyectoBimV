@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.losscrums.ProyectoHoteleria.DTO.HotelSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
@@ -137,7 +135,6 @@ public class HotelController {
     //Creamos metodo de agregar.
     @PostMapping("/post")
     public ResponseEntity<?> postHotel(
-            @RequestPart("profilePicture") MultipartFile profilePicture,
             @Valid @ModelAttribute HotelSaveDTO hotel,
             BindingResult result) {
 
@@ -154,9 +151,6 @@ public class HotelController {
         }
 
         try {
-            // Subir imagen a Cloudinary y obtener la URL
-            Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(profilePicture, "profilesHotel");
-            String img = uploadResult.get("url").toString();
 
             // Verificar si ya existen hoteles con el mismo nombre
             List<Hotel> existingHotels = hotelService.getHotelsByName(hotel.getName());
@@ -185,10 +179,7 @@ public class HotelController {
             newHotel.setAddress(hotel.getAddress());
             newHotel.setNumStars(hotel.getNumStars());
             newHotel.setComfort(hotel.getComfort());
-            newHotel.setProfilePicture(img);
             newHotel.setNumberRent(nameCounter); // se le asigna el contador.
-
-            
 
             // Guardamos el nuevo hotel
             hotelService.saveHotel(newHotel);
@@ -218,11 +209,6 @@ public class HotelController {
     public ResponseEntity<?> editHotel(
             //Esperamos la id para buscar el que vamos a editar
             @PathVariable long id,
-            /*Decimos que profilePicture va a ser parte de la solicitud del MultipartFile
-             * el cual utiliza la interfaz de MultipartFile para manejar una imagen
-             * la cual esta esperando el RequestPart
-             */
-            @RequestPart("profilePicture") MultipartFile profilePicture,
             /*Se ejecutan las validaciones que definimos en HotelDTO, con ModelAttribute indicamos que el parametro hotel
              * debe ser enlazado con los datos del formulario en la solicitud del multipart.
              * 
@@ -252,23 +238,11 @@ public class HotelController {
                 return ResponseEntity.internalServerError().body(res);
             }
 
-            // Sube una nueva imagen si se le agrega.
-            String img;
-            if (!profilePicture.isEmpty()) {
-                Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(profilePicture, "profilesHotel");
-                img = uploadResult.get("url").toString();
-            } else {
-                // Mantiene la imagen existente si no se le sube otra.
-                img = existingHotel.getProfilePicture();
-            }
-
             // Actualiza los datos del hotel con los valores nuevos del DTO
             existingHotel.setName(hotel.getName());
             existingHotel.setAddress(hotel.getAddress());
             existingHotel.setNumStars(hotel.getNumStars());
             existingHotel.setComfort(hotel.getComfort());
-            existingHotel.setProfilePicture(img);
-
 
             // Se guardan los cambios en el hotelService
             hotelService.saveHotel(existingHotel);
@@ -315,6 +289,5 @@ public class HotelController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
         }
     }
-
 
 }

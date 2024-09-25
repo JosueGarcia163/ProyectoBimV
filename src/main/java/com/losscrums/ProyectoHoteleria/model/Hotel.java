@@ -31,9 +31,6 @@ public class Hotel {
     // Nivel de confort del hotel
     private String comfort; 
 
-    //No es obligatoria
-    private String profilePicture;
-
     private int numberRent;
     
 }
