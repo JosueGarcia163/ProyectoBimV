@@ -18,9 +18,6 @@ public interface IUserService {
     // Método para eliminar un usuario
     public void deleteUser(User user);
 
-    // Método para buscar un usuario por su nombre de usuario
-    public User findUserByUsername(String username);
-
    // public Event editUser(Long idUser, UserSaveDTO userDTO);
 
     boolean login(String username, String password);

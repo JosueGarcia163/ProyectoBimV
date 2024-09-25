@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.losscrums.ProyectoHoteleria.DTO.RoomResponseDTO;
 import com.losscrums.ProyectoHoteleria.model.Event;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
-import com.losscrums.ProyectoHoteleria.model.Reservation;
 import com.losscrums.ProyectoHoteleria.model.Room;
 import com.losscrums.ProyectoHoteleria.repository.RoomRepository;
 import com.losscrums.ProyectoHoteleria.service.IService.IRoomService;
@@ -26,28 +25,13 @@ public class RoomService implements IRoomService {
     @Autowired
     private HotelService hotelService;
 
-    @Autowired
-    private ReservationService reservationService;
 
     //Metodo listar habitacion.
     @Override
-    public List<RoomResponseDTO> listRoom() {
+    public List<Room> listRoom() {
         //Guardamos todo en una lista
-        List<Room> rooms = roomRepository.findAll();
-
-        //mapeamos la lista para hacer que aparezcan todos los datos, exceptuando el de Reservation.
-        return rooms.stream()
-                .map(room -> new RoomResponseDTO(
-                room.getIdRoom(),
-                room.getRoomType(),
-                room.getCapacity(),
-                room.getAvailability(),
-                room.getAvailabilityDate(),
-                room.getHotel(),
-                room.getEvent(),
-                room.getReservation().getIdReservation() // Solo el número de reservación.
-        ))
-                .collect(Collectors.toList());
+        return roomRepository.findAll();
+    
     }
 
     //Este buscar nos sirve para los metodos guardar, editar y eliminar.
@@ -79,8 +63,7 @@ public class RoomService implements IRoomService {
                 room.getAvailability(),
                 room.getAvailabilityDate(),
                 room.getHotel(),
-                room.getEvent(),
-                room.getReservation().getIdReservation()
+                room.getEvent()
         ))
                 .collect(Collectors.toList());
     }
@@ -98,30 +81,12 @@ public class RoomService implements IRoomService {
                 room.getAvailability(),
                 room.getAvailabilityDate(),
                 room.getHotel(),
-                room.getEvent(),
-                room.getReservation().getIdReservation()
+                room.getEvent()
         ))
                 .collect(Collectors.toList());
     }
 
-    //Esta funcion sirve para listar habitacion por medio de reservacion.
-    @Override
-    public List<RoomResponseDTO> getRoomforReservation(long reservationId) {
-        Reservation reservation = reservationService.find(reservationId);
-        List<Room> rooms = roomRepository.findByReservation(reservation);
-        return rooms.stream()
-                .map(room -> new RoomResponseDTO(
-                room.getIdRoom(),
-                room.getRoomType(),
-                room.getCapacity(),
-                room.getAvailability(),
-                room.getAvailabilityDate(),
-                room.getHotel(),
-                room.getEvent(),
-                room.getReservation().getIdReservation()
-        ))
-                .collect(Collectors.toList());
-    }
+
 
     @Override
     public RoomResponseDTO findRoomById(long id) {
@@ -136,9 +101,9 @@ public class RoomService implements IRoomService {
                 room.getAvailability(),
                 room.getAvailabilityDate(),
                 room.getHotel(),
-                room.getEvent(),
-                room.getReservation().getIdReservation() // Solo el ID de la reservación.
+                room.getEvent()
         );
     }
+
 
 }

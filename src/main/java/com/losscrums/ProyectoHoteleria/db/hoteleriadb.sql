@@ -19,47 +19,25 @@ VALUES ('Pedro', 'Ramírez', 'pedroram', 'pedro.ramirez@example.com', 'password6
 INSERT INTO user (name, surname, username, email, password, nit)
 VALUES ('Pedro', 'Ramírez', 'emilis', ' emily.ramirez@example.com', 'password654', 321654987);
 
--- Insertar reservacion.
-INSERT INTO reservation (start, end, cost, status, user_id_user)
-VALUES ('2024-10-01 14:00:00', '2024-10-01 16:00:00', '100.00', 'PROCESS', 5);
-
-INSERT INTO reservation (start, end, cost, status, user_id_user)
-VALUES ('2024-11-05 10:00:00', '2024-11-05 12:00:00', '150.00', 'PROCESS', 4);
-
-INSERT INTO reservation (start, end, cost, status, user_id_user)
-VALUES ('2024-12-12 18:00:00', '2024-12-12 20:00:00', '200.00', 'RESERVED', 3);
-
-INSERT INTO reservation (start, end, cost, status, user_id_user)
-VALUES ('2024-09-30 09:00:00', '2024-09-30 11:00:00', '120.00', 'RESERVED', 2);
-
-INSERT INTO reservation (start, end, cost, status, user_id_user)
-VALUES ('2024-10-15 15:00:00', '2024-10-15 17:00:00', '180.00', 'CANCELED', 1);
-
-INSERT INTO reservation (start, end, cost, status, user_id_user)
-VALUES ('2024-10-15 15:00:00', '2024-10-15 17:00:00', '200.00', 'RESERVED', 3);
-
-INSERT INTO reservation (start, end, cost, status, user_id_user)
-VALUES ('2024-10-15 15:00:00', '2024-10-15 17:00:00', '280.00', 'RESERVED', 4);
-
 
 -- Insertar hotel.
-INSERT INTO hotel (name, address, num_stars, comfort, reservation_id_reservation ) 
-VALUES ('Hotel Sol y Mar', 'Calle del Sol 123, Barcelona', 4, 'Confortable',5);
+INSERT INTO hotel (name, address, num_stars, comfort, number_rent) 
+VALUES ('Hotel Sol y Mar', 'Calle del Sol 123, Barcelona', 4, 'Confortable',1);
  
 -- Inserción 2
-INSERT INTO hotel (name, address, num_stars, comfort, reservation_id_reservation) 
-VALUES ('Gran Hotel Plaza', 'Avenida Central 456, Madrid', 5, 'Lujo',4);
+INSERT INTO hotel (name, address, num_stars, comfort, number_rent) 
+VALUES ('Gran Hotel Plaza', 'Avenida Central 456, Madrid', 5, 'Lujo',1);
  
 -- Inserción 3
-INSERT INTO hotel (name, address, num_stars, comfort, reservation_id_reservation) 
-VALUES ('Hotel Costa Azul', 'Playa del Mar 789, Valencia', 3, 'Sencillo',3);
+INSERT INTO hotel (name, address, num_stars, comfort, number_rent) 
+VALUES ('Hotel Costa Azul', 'Playa del Mar 789, Valencia', 3, 'Sencillo',1);
  
 -- Inserción 4
-INSERT INTO hotel (name, address, num_stars, comfort, reservation_id_reservation) 
-VALUES ('Hotel Montaña', 'Calle Alta 101, Granada', 4, 'Confortable',2);
+INSERT INTO hotel (name, address, num_stars, comfort, number_rent) 
+VALUES ('Hotel Montaña', 'Calle Alta 101, Granada', 4, 'Confortable',1);
  
 -- Inserción 5
-INSERT INTO hotel (name, address, num_stars, comfort, reservation_id_reservation) 
+INSERT INTO hotel (name, address, num_stars, comfort, number_rent)
 VALUES ('Hotel Luna', 'Avenida del Lago 202, Sevilla', 3, 'Sencillo',1);
  
 
@@ -93,25 +71,62 @@ VALUES
 ('Party', 'party', 250.00, '2024-12-31 20:00:00', '2025-01-01 01:00:00', 4);
 
 -- Insertar room 1.
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event, reservation_id_reservation) 
-VALUES ('Suite', '2 personas', 'Disponible', '2024-09-15', 2,5,4);
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
+VALUES ('Suite', '2 personas', 'Disponible', '2024-09-15', 2,5);
  
 -- Insertar room 2.
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event, reservation_id_reservation) 
-VALUES ('Doble', '2 personas', 'No Disponible', '2024-09-16', 1,4,3);
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
+VALUES ('Doble', '2 personas', 'No Disponible', '2024-09-16', 1,4);
  
 -- Insertar room 3.
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event, reservation_id_reservation) 
-VALUES ('Individual', '1 persona', 'Disponible', '2024-09-17', 3,3,2);
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
+VALUES ('Individual', '1 persona', 'Disponible', '2024-09-17', 3,3);
  
 -- Insertar room 4.
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event, reservation_id_reservation) 
-VALUES ('Familiar', '4 personas', 'Disponible', '2024-09-18', 4,2,5);
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
+VALUES ('Familiar', '4 personas', 'Disponible', '2024-09-18', 4,2);
  
 -- Insertar room 5.
-INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event, reservation_id_reservation) 
-VALUES ('Suite', '2 personas', 'No Disponible', '2024-09-19', 5,1,1);
- 
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
+VALUES ('Suite', '2 personas', 'No Disponible', '2024-09-19', 5,1);
+
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
+VALUES ('Suite', '2 personas', 'No Disponible', '2024-09-19', 5,1);
+
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
+VALUES ('Individual', '1 persona', 'Disponible', '2024-09-17', 3,3);
+
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
+VALUES ('Individual', '1 persona', 'Disponible', '2024-09-17', 3,3);
+
+INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
+VALUES ('Individual', '1 persona', 'Disponible', '2024-09-17', 3,3);
+
+
+-- Insertar reservacion.
+INSERT INTO reservation (start, end, cost, status, user_id_user, room_id_room)
+VALUES ('2024-10-01 14:00:00', '2024-10-01 16:00:00', '100.00', 'PROCESS', 5,1);
+
+INSERT INTO reservation (start, end, cost, status, user_id_user, room_id_room)
+VALUES ('2024-11-05 10:00:00', '2024-11-05 12:00:00', '150.00', 'PROCESS', 4,2);
+
+INSERT INTO reservation (start, end, cost, status, user_id_user, room_id_room)
+VALUES ('2024-12-12 18:00:00', '2024-12-12 20:00:00', '200.00', 'RESERVED', 3,3);
+
+INSERT INTO reservation (start, end, cost, status, user_id_user, room_id_room)
+VALUES ('2024-09-30 09:00:00', '2024-09-30 11:00:00', '120.00', 'RESERVED', 2,4);
+
+INSERT INTO reservation (start, end, cost, status, user_id_user, room_id_room)
+VALUES ('2024-10-15 15:00:00', '2024-10-15 17:00:00', '180.00', 'CANCELED', 1,7);
+
+INSERT INTO reservation (start, end, cost, status, user_id_user, room_id_room)
+VALUES ('2024-10-15 15:00:00', '2024-10-15 17:00:00', '200.00', 'RESERVED', 3,5);
+
+INSERT INTO reservation (start, end, cost, status, user_id_user, room_id_room)
+VALUES ('2024-10-15 15:00:00', '2024-10-15 17:00:00', '280.00', 'RESERVED', 4,6);
+
+
+
 -- Insertar services
 INSERT INTO services (type_service, capacity, cost, description, event_id_event)
 VALUES ('Spa', 10, 50.00, 'Servicio de spa completo con masajes', 1);

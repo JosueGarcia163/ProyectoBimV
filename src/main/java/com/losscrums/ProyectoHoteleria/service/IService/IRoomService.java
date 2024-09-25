@@ -7,7 +7,7 @@ import com.losscrums.ProyectoHoteleria.model.Room;
 
 public interface IRoomService {
 
-    List<RoomResponseDTO> listRoom();
+    List<Room> listRoom();
 
     Room findRoom(Long id);
 
@@ -23,5 +23,4 @@ public interface IRoomService {
     //Creamos el metodo en la interfaz que nos permite listar room por id de evento.
     List<RoomResponseDTO> getRoomforEvent(Long eventId);
 
-    List<RoomResponseDTO> getRoomforReservation(long reservationId);
 }

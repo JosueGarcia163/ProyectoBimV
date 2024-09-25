@@ -179,4 +179,25 @@ public class ReservationController {
         }
     }
 
+
+   @GetMapping("/room/{RoomId}")
+    public ResponseEntity<?> getReservationforRoom(@PathVariable Long RoomId) {
+        Map<String, Object> res = new HashMap<>();
+        try {
+            List<ReservationResponseDTO> reservationSaveDTOs = reservationService.findByRoom(RoomId);
+            //Validacion, si no encuentra nada por medio del Id.
+            if (reservationSaveDTOs == null || reservationSaveDTOs.isEmpty()) {
+                res.put("message", "Aún no tienes reservas creados");
+                return ResponseEntity.status(404).body(res);
+            } else {
+                return ResponseEntity.ok(reservationSaveDTOs);
+            }
+        } catch (Exception err) {
+            res.put("message", "Error general al obtener los datos");
+            res.put("error", err);
+            return ResponseEntity.internalServerError().body(res);
+        }
+    }
+
+
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,10 +34,7 @@ public class Hotel {
     //No es obligatoria
     private String profilePicture;
 
-    @OneToOne
-    private Reservation reservation;
-
-    private int nameCounter;
+    private int numberRent;
     
 }
 

@@ -22,10 +22,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.losscrums.ProyectoHoteleria.DTO.HotelResponseDTO;
 import com.losscrums.ProyectoHoteleria.DTO.HotelSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
-import com.losscrums.ProyectoHoteleria.model.Reservation;
 import com.losscrums.ProyectoHoteleria.service.CloudinaryService;
 import com.losscrums.ProyectoHoteleria.service.HotelService;
 import com.losscrums.ProyectoHoteleria.service.ReservationService;
@@ -136,7 +134,6 @@ public class HotelController {
         }
     }
 
-    
     //Creamos metodo de agregar.
     @PostMapping("/post")
     public ResponseEntity<?> postHotel(
@@ -165,12 +162,13 @@ public class HotelController {
             List<Hotel> existingHotels = hotelService.getHotelsByName(hotel.getName());
             int nameCounter = 1;
 
+            //Verifica que la lista no este vacia, si no hay hoteles con el mismo nombre el codigo no se ejecuta.
             if (!existingHotels.isEmpty()) {
                 // Si ya existen hoteles con el mismo nombre, incrementar el contador
                 nameCounter = existingHotels.stream()
-                        .mapToInt(Hotel::getNameCounter)
-                        .max()
-                        .orElse(0) + 1;
+                        .mapToInt(Hotel::getNumberRent)//transforma existingHotels a enteros de la clase Hotel.
+                        .max()//Busca el valor máximo de todos los números obtenidos a partir del método getNumberRent()
+                        .orElse(0) + 1; // si la lista esta vacia devuelve 0, y se le suma 1 al valor maximo encontrado.
             }
             /*Creamos nuevo hotel
              * Lo creamos de esta forma ya que si lo creamos de la forma tradicional
@@ -178,8 +176,8 @@ public class HotelController {
              * no queremos eso, para ello utilizamos los setters and getters 
              * para poder guardar los datos en hotel y asi poder darle el valor a 
              * contador sin que el usuario tenga que tocarlo.
-            */
-            
+             */
+
             Hotel newHotel = new Hotel();
             // Creamos hotelSaveDTO para poder guardarlo en newHotel.
             newHotel.setIdHotel(null);//id no lo tocamos por que se genera automaticamente
@@ -188,11 +186,9 @@ public class HotelController {
             newHotel.setNumStars(hotel.getNumStars());
             newHotel.setComfort(hotel.getComfort());
             newHotel.setProfilePicture(img);
-            newHotel.setNameCounter(nameCounter); // se le asigna el contador.
+            newHotel.setNumberRent(nameCounter); // se le asigna el contador.
 
-            // Asociar la reservación si existe
-            Reservation reservation = reservationService.find(hotel.getReservationId());
-            newHotel.setReservation(reservation);
+            
 
             // Guardamos el nuevo hotel
             hotelService.saveHotel(newHotel);
@@ -273,9 +269,6 @@ public class HotelController {
             existingHotel.setComfort(hotel.getComfort());
             existingHotel.setProfilePicture(img);
 
-            Reservation reservation = reservationService.find(hotel.getReservationId());
-
-            existingHotel.setReservation(reservation);
 
             // Se guardan los cambios en el hotelService
             hotelService.saveHotel(existingHotel);
@@ -323,22 +316,5 @@ public class HotelController {
         }
     }
 
-    @GetMapping("/reservation/{reservationId}")
-    public ResponseEntity<?> getHotelforReservation(@PathVariable Long reservationId) {
-        Map<String, Object> res = new HashMap<>();
-        try {
-            List<HotelResponseDTO> hotelSaveDTOs = hotelService.getHotelforReservation(reservationId);
-            if (hotelSaveDTOs == null || hotelSaveDTOs.isEmpty()) {
-                res.put("message", "Aun no tienes reservaciones creadas");
-                return ResponseEntity.status(404).body(res);
-            } else {
-                return ResponseEntity.ok(hotelSaveDTOs);
-            }
-        } catch (Exception err) {
-            res.put("message", "Error general al obtener los datos");
-            res.put("error", err);
-            return ResponseEntity.internalServerError().body(res);
-        }
-    }
 
 }
