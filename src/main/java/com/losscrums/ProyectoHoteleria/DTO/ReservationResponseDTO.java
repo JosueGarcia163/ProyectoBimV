@@ -2,6 +2,7 @@ package com.losscrums.ProyectoHoteleria.DTO;
 
 import java.sql.Timestamp;
 
+import com.losscrums.ProyectoHoteleria.model.Room;
 import com.losscrums.ProyectoHoteleria.utils.Status;
 
 import lombok.AllArgsConstructor;
@@ -19,5 +20,7 @@ public class ReservationResponseDTO {
     private String cost;
     private Status status;
     private UserClearDTO user;
+    private Room room;
+
 
 }

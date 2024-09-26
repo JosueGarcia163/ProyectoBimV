@@ -18,14 +18,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.losscrums.ProyectoHoteleria.DTO.HotelSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
 import com.losscrums.ProyectoHoteleria.service.CloudinaryService;
 import com.losscrums.ProyectoHoteleria.service.HotelService;
+import com.losscrums.ProyectoHoteleria.service.ReservationService;
 
 import jakarta.validation.Valid;
 
@@ -38,6 +37,9 @@ public class HotelController {
 
     @Autowired
     CloudinaryService cloudinaryService;
+
+    @Autowired
+    ReservationService reservationService;
 
     // Rutas especificas
 
@@ -73,6 +75,35 @@ public class HotelController {
         }
     }
 
+    @GetMapping("/list/requested")
+    public ResponseEntity<?> listHotelsByNameCounter() {
+        Map<String, Object> res = new HashMap<>();
+
+        try {
+            // Utilizamos el servicio para usar la funcion de listar por contador y guardarlo en una lista de hotel.
+            List<Hotel> hotels = hotelService.listHotelsOrderedByNameCounter();
+
+            // Devolvemos esa lista.
+            return ResponseEntity.ok().body(hotels);
+
+            //Captura de errores.
+        } catch (CannotCreateTransactionException err) {
+            res.put("Message", "Error al momento de conectarse a la db");
+            res.put("Error", err.getMessage().concat(err.getMostSpecificCause().getMessage()));
+            return ResponseEntity.status(503).body(res);
+
+        } catch (DataAccessException err) {
+            res.put("Message", "Error al momento de consultar a la db");
+            res.put("Error", err.getMessage().concat(err.getMostSpecificCause().getMessage()));
+            return ResponseEntity.status(503).body(res);
+
+        } catch (Exception err) {
+            res.put("Message", "Error general al obtener datos.");
+            res.put("Error", err.getMessage());
+            return ResponseEntity.internalServerError().body(res);
+        }
+    }
+
     @GetMapping("/list/{id}")
     public ResponseEntity<?> getHotel(@PathVariable long id) {
         Map<String, Object> res = new HashMap<>();
@@ -101,51 +132,74 @@ public class HotelController {
         }
     }
 
+    //Creamos metodo de agregar.
     @PostMapping("/post")
-    public ResponseEntity<?> postHotel(@RequestPart("profilePicture") MultipartFile profilePicture,
-            // Multipart-formadata
-            //@Valid ejecuta todas las validaciones del modelo DTO
-            //RequestBody para el JSON / ModelAttribute para archivos tambien.
-
+    public ResponseEntity<?> postHotel(
             @Valid @ModelAttribute HotelSaveDTO hotel,
-            //BindingResult captura los errores si en tal caso no pasa las validaciones.
-            BindingResult result
-    ) {
+            BindingResult result) {
 
         Map<String, Object> res = new HashMap<>();
-        //Verifica si hay errores de validacion de result.
+
+        // Validaciones de DTO
         if (result.hasErrors()) {
-            //Obtenemos una lista de todos los errores de campo del BindingResult
-            List<String> errors = result.getFieldErrors().
-            //Se crea un flujo de stream a partir de la lista de errores.
-                    stream().map(error -> error.getDefaultMessage()).
-                    //Recolecta todos los mensajes de error de la lista.
-                    collect(Collectors.toList());
-            res.put("message", "Error en las validaciones porfavor ingresa en todos los campos.");
+            List<String> errors = result.getFieldErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .collect(Collectors.toList());
+            res.put("message", "Error en las validaciones, por favor completa todos los campos.");
             res.put("Errors", errors);
-            //HTTP con el estado 400 (Bad Request)
             return ResponseEntity.badRequest().body(res);
         }
 
         try {
-            //Creamos una variable map donde vamos a subir la imagen con el nombre profilesHotel
-            Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(profilePicture,
-                    "profilesHotel");
 
-          
-            String img = uploadResult.get("url").toString();
-            Long id = null;
-            Hotel newHotel = new Hotel(id, hotel.getName(), hotel.getAddress(), hotel.getNumStars(), hotel.getComfort(), img);
-            //Utiliza servicios de cloudinary para subir la imagen que manda el hotel.
+            // Verificar si ya existen hoteles con el mismo nombre
+            List<Hotel> existingHotels = hotelService.getHotelsByName(hotel.getName());
+            int nameCounter = 1;
+
+            //Verifica que la lista no este vacia, si no hay hoteles con el mismo nombre el codigo no se ejecuta.
+            if (!existingHotels.isEmpty()) {
+                // Si ya existen hoteles con el mismo nombre, incrementar el contador
+                nameCounter = existingHotels.stream()
+                        .mapToInt(Hotel::getNumberRent)//transforma existingHotels a enteros de la clase Hotel.
+                        .max()//Busca el valor máximo de todos los números obtenidos a partir del método getNumberRent()
+                        .orElse(0) + 1; // si la lista esta vacia devuelve 0, y se le suma 1 al valor maximo encontrado.
+            }
+            /*Creamos nuevo hotel
+             * Lo creamos de esta forma ya que si lo creamos de la forma tradicional
+             * el usuario estaria obligado a dar un valor al contador y nosotros
+             * no queremos eso, para ello utilizamos los setters and getters 
+             * para poder guardar los datos en hotel y asi poder darle el valor a 
+             * contador sin que el usuario tenga que tocarlo.
+             */
+
+            Hotel newHotel = new Hotel();
+            // Creamos hotelSaveDTO para poder guardarlo en newHotel.
+            newHotel.setIdHotel(null);//id no lo tocamos por que se genera automaticamente
+            newHotel.setName(hotel.getName());
+            newHotel.setAddress(hotel.getAddress());
+            newHotel.setNumStars(hotel.getNumStars());
+            newHotel.setComfort(hotel.getComfort());
+            newHotel.setNumberRent(nameCounter); // se le asigna el contador.
+
+            // Guardamos el nuevo hotel
             hotelService.saveHotel(newHotel);
-            res.put("message", "hotel recibido correctamente.");
+            res.put("message", "Hotel recibido y guardado correctamente.");
             return ResponseEntity.ok(res);
+
+        } catch (CannotCreateTransactionException err) {
+            res.put("Message", "Error al conectarse a la base de datos.");
+            res.put("Error", err.getMessage());
+            return ResponseEntity.status(503).body(res);
+
+        } catch (DataAccessException err) {
+            res.put("Message", "Error al consultar la base de datos.");
+            res.put("Error", err.getMessage());
+            return ResponseEntity.status(503).body(res);
 
         } catch (Exception err) {
             res.put("Message", "Error general al obtener datos.");
             res.put("Error", err.getMessage());
             return ResponseEntity.internalServerError().body(res);
-
         }
     }
 
@@ -155,11 +209,6 @@ public class HotelController {
     public ResponseEntity<?> editHotel(
             //Esperamos la id para buscar el que vamos a editar
             @PathVariable long id,
-            /*Decimos que profilePicture va a ser parte de la solicitud del MultipartFile
-             * el cual utiliza la interfaz de MultipartFile para manejar una imagen
-             * la cual esta esperando el RequestPart
-             */
-            @RequestPart("profilePicture") MultipartFile profilePicture,
             /*Se ejecutan las validaciones que definimos en HotelDTO, con ModelAttribute indicamos que el parametro hotel
              * debe ser enlazado con los datos del formulario en la solicitud del multipart.
              * 
@@ -189,22 +238,11 @@ public class HotelController {
                 return ResponseEntity.internalServerError().body(res);
             }
 
-            // Sube una nueva imagen si se le agrega.
-            String img;
-            if (!profilePicture.isEmpty()) {
-                Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(profilePicture, "profilesHotel");
-                img = uploadResult.get("url").toString();
-            } else {
-                // Mantiene la imagen existente si no se le sube otra.
-                img = existingHotel.getProfilePicture();
-            }
-
             // Actualiza los datos del hotel con los valores nuevos del DTO
             existingHotel.setName(hotel.getName());
             existingHotel.setAddress(hotel.getAddress());
             existingHotel.setNumStars(hotel.getNumStars());
             existingHotel.setComfort(hotel.getComfort());
-            existingHotel.setProfilePicture(img);
 
             // Se guardan los cambios en el hotelService
             hotelService.saveHotel(existingHotel);

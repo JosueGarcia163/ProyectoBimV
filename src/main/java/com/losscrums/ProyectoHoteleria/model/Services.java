@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// La entidad Servicio representa un servicio disponible en el sistema de hotelería.
+// La entidad Services representa un servicio disponible en el sistema de hotelería.
 // Incluye atributos como el tipo de servicio, capacidad, costo y descripción.
 @Entity
 @AllArgsConstructor
@@ -43,9 +43,10 @@ public class Services {
     // Este campo no puede estar en blanco.
     @NotBlank
     private String description;
-    //Conexion con evento;
+
+    // Relación con la entidad Event, indicando el evento asociado al servicio.
+    // Este campo no puede ser nulo.
     @NotNull
     @ManyToOne
     private Event event;
 }
-

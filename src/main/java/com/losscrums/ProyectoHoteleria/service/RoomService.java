@@ -25,11 +25,16 @@ public class RoomService implements IRoomService {
     @Autowired
     private HotelService hotelService;
 
+
+    //Metodo listar habitacion.
     @Override
     public List<Room> listRoom() {
+        //Guardamos todo en una lista
         return roomRepository.findAll();
+    
     }
 
+    //Este buscar nos sirve para los metodos guardar, editar y eliminar.
     @Override
     public Room findRoom(Long id) {
         return roomRepository.findById(id).orElse(null);
@@ -45,6 +50,7 @@ public class RoomService implements IRoomService {
         roomRepository.delete(room);
     }
 
+    //Esta funcion sirve para listar habitacion por medio de Hotel.
     @Override
     public List<RoomResponseDTO> getRoomforHotel(Long hotelId) {
         Hotel hotel = hotelService.findHotel(hotelId);
@@ -62,6 +68,7 @@ public class RoomService implements IRoomService {
                 .collect(Collectors.toList());
     }
 
+    //Esta funcion sirve para listar habitacion por medio de Evento.
     @Override
     public List<RoomResponseDTO> getRoomforEvent(Long eventId) {
         Event event = eventService.findEvent(eventId);
@@ -79,7 +86,24 @@ public class RoomService implements IRoomService {
                 .collect(Collectors.toList());
     }
 
-    
 
-  
+
+    @Override
+    public RoomResponseDTO findRoomById(long id) {
+        // Busca la habitación por su ID
+        Room room = roomRepository.findById(id).orElse(null);
+
+        // Se usa el DTO para mostar los datos de room, hotel, evento y unicamente el Id de reservacion.
+        return new RoomResponseDTO(
+                room.getIdRoom(),
+                room.getRoomType(),
+                room.getCapacity(),
+                room.getAvailability(),
+                room.getAvailabilityDate(),
+                room.getHotel(),
+                room.getEvent()
+        );
+    }
+
+
 }

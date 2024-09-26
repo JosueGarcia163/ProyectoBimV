@@ -35,7 +35,7 @@ public class EventController {
     EventService eventService;
 
     //Funcion para encontrar evento por Id hotel.
-    @GetMapping("/{hotelId}")
+    @GetMapping("/hotel/{hotelId}")
     public ResponseEntity<?> getEventforHotel(@PathVariable Long hotelId) {
         Map<String, Object> res = new HashMap<>();
         try {
@@ -70,8 +70,8 @@ public class EventController {
         }
         try {
             Event event = eventService.saveEvent(eventDTO);
-            res.put("message", "Reservación guardada exitosamente");
-            res.put("reservation", event);
+            res.put("message", "Evento guardada exitosamente");
+            res.put("event", event);
             return ResponseEntity.ok(res);
         } catch (Exception err) {
             res.put("message", "Error al guardar la reservacion, intente de nuevo más tarde");

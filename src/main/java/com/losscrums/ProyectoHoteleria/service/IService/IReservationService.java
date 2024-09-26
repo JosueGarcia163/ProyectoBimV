@@ -8,21 +8,27 @@ import com.losscrums.ProyectoHoteleria.model.Reservation;
 
 public interface IReservationService {
     
-    // Method to find all reservations
+    // Método para encontrar todas las reservas
     List<ReservationResponseDTO> findAll();
 
-    // Method to find a reservation by its ID
-    public Reservation findById(Long id); 
+    // Método para encontrar una reserva por su ID
+    ReservationResponseDTO findById(Long id);
 
-    // Method to save a reservation
+    // Método para encontrar una reserva y permitir su eliminación
+    Reservation find(Long id);
+
+    // Método para guardar una nueva reserva
     Reservation save(ReservationSaveDTO reservation);
 
-    // Method to delete a reservation by ID
-    void delete(Reservation reservation);
+    // Método para eliminar una reserva por su ID
+    public void delete(Reservation reservation);
 
-    // Method to find reservations by user
+    // Método para encontrar reservas por usuario
     List<ReservationResponseDTO> findByUser(long userId);
 
+    // Método para editar una reserva existente
     public Reservation editReservation(Long idReservation, ReservationSaveDTO reservationDTO);
-}
 
+    // Método para encontrar reservas por habitación
+    List<ReservationResponseDTO> findByRoom(long roomId);
+}

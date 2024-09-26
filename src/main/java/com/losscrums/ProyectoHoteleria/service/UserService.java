@@ -45,11 +45,6 @@ public class UserService implements IUserService {
         userRepository.delete(user);
     }
 
-    @Override
-    public User findUserByUsername(String username) {
-        // Buscar un usuario por su nombre de usuario
-        return userRepository.findByUsername(username);
-    }
 
     
     @Override

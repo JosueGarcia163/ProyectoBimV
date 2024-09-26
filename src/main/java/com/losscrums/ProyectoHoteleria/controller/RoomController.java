@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.losscrums.ProyectoHoteleria.DTO.RoomSaveDTO;
 import com.losscrums.ProyectoHoteleria.DTO.RoomResponseDTO;
+import com.losscrums.ProyectoHoteleria.DTO.RoomSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.Event;
 import com.losscrums.ProyectoHoteleria.model.Hotel;
 import com.losscrums.ProyectoHoteleria.model.Room;
@@ -99,6 +99,7 @@ public class RoomController {
         try {
             //utilizamos los atributos del bean DTO de habitaciones
             Long id = null;
+            //Buscamos los id de cada entidad para poder guardarla.
             Hotel hotel = hotelService.findHotel(room.getHotelId());
             Event event = eventService.findEvent(room.getEventId());
             Room newRoom = new Room(
@@ -125,8 +126,8 @@ public class RoomController {
         Map<String, Object> res = new HashMap<>();
         // La inyeccion de la depencia del servicio de habitaciones
         try{
-            Room habitacion = roomService.findRoom(id);
-            return ResponseEntity.ok().body(habitacion);
+            RoomResponseDTO room = roomService.findRoomById(id);
+            return ResponseEntity.ok().body(room);
         // Aqui capturas posibles errores
         } catch (CannotCreateTransactionException err) {
             res.put("Message", "Error al momento de conectarse a la db");
@@ -178,9 +179,10 @@ public class RoomController {
             existingHabitacion.setCapacity(room.getCapacity());
             existingHabitacion.setAvailability(room.getAvailability());
             existingHabitacion.setAvailabilityDate(room.getAvailabilityDate());
-            //Creamos el set para modificar la llave foranea de room osea hotelId.
+            //Creamos el set para modificar la llave foranea de room osea hotelId, eventId, reservationId.
             Hotel hotel = hotelService.findHotel(room.getHotelId());
             Event event = eventService.findEvent(room.getEventId());
+
             existingHabitacion.setHotel(hotel);
             existingHabitacion.setEvent(event);
             // Se guarda los cambios en el servicio den habitacion
@@ -268,4 +270,6 @@ public class RoomController {
             return ResponseEntity.internalServerError().body(res);
         }
     }
+
+    
 }

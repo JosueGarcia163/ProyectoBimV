@@ -20,6 +20,12 @@ public interface IHotelService {
     // Método para eliminar un hotel
     public void deleteHotel(Hotel hotel);
 
+    //Creamos la lista que utilizaremos en el servicio para poder buscar por nombre.
+    public List<Hotel> getHotelsByName(String name);
+
+    //Creamos la funcion para listar por medio del contador.
+    public List<Hotel> listHotelsOrderedByNameCounter();
+
 }
 
 

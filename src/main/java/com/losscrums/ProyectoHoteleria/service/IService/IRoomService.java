@@ -11,6 +11,8 @@ public interface IRoomService {
 
     Room findRoom(Long id);
 
+    RoomResponseDTO findRoomById(long id);
+
     Room saveRoom(Room room);
 
     public void deleteRoom(Room room);
@@ -20,4 +22,5 @@ public interface IRoomService {
 
     //Creamos el metodo en la interfaz que nos permite listar room por id de evento.
     List<RoomResponseDTO> getRoomforEvent(Long eventId);
+
 }

@@ -42,6 +42,5 @@ public class User {
     @NotNull
     private Long nit;
 
-    private String personalImage;
     
 }
