@@ -13,6 +13,4 @@ public class HotelResponseDTO {
     private String address;
     private Long numStars; 
     private String comfort; 
-    private String profilePicture;
-    private long reservationId;
 }

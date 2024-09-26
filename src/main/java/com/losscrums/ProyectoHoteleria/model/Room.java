@@ -35,8 +35,5 @@ public class Room {
     //Esto nos permite tener muchas habitaciones en un mismo evento.
     @ManyToOne
     private Event event;
-    //Muchos cuartos se pueden reservar en una reservacion.
-    @ManyToOne
-    private Reservation reservation;
 
 }

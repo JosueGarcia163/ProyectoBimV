@@ -19,14 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.losscrums.ProyectoHoteleria.DTO.UserLoginDTO;
 import com.losscrums.ProyectoHoteleria.DTO.UserSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.User;
-import com.losscrums.ProyectoHoteleria.service.CloudinaryService;
 import com.losscrums.ProyectoHoteleria.service.UserService;
 
 import jakarta.validation.Valid;
@@ -38,9 +35,6 @@ public class UserController {
 
     @Autowired
     UserService userService;
-
-    @Autowired
-    CloudinaryService cloudinaryService;
 
     @GetMapping("/list")
     public ResponseEntity<?> listUser(){
@@ -66,7 +60,6 @@ public class UserController {
 
     @PostMapping("/post")
     public ResponseEntity<?> addUser(
-        @RequestPart("personalImage") MultipartFile personalImage,
         @Valid @ModelAttribute UserSaveDTO user,
         BindingResult result
     ){
@@ -81,8 +74,6 @@ public class UserController {
             return ResponseEntity.badRequest().body(res);
         }
         try {
-            Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(personalImage, "profilePersonalImage");
-            String img = uploadResult.get("url").toString();
             Long idUser = null;
             User newUser = new User(
                 idUser,
@@ -91,8 +82,7 @@ public class UserController {
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
-                user.getNit(),
-                img
+                user.getNit()
             );
             userService.saveUser(newUser);
             res.put("message", "Usuario guardado correctamente");
@@ -126,7 +116,6 @@ public class UserController {
     @PutMapping("put/{idUser}")
     public ResponseEntity<?> editUser(
         @PathVariable long idUser,
-        @RequestPart("personalImage") MultipartFile personalImage,
         @Valid @ModelAttribute UserSaveDTO user,
         BindingResult result
     ){
@@ -147,21 +136,12 @@ public class UserController {
                 res.put("message", "No se encontro el usuario con el ID proporcionado");
                 return ResponseEntity.internalServerError().body(res);
             }
-
-            String img;
-            if(!personalImage.isEmpty()){
-                Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(personalImage, "profilePersonalImage");
-                img = uploadResult.get("url").toString();
-            } else{
-                img = existingUser.getPersonalImage();
-            }
             existingUser.setName(user.getName());
             existingUser.setSurname(user.getSurname());
             existingUser.setUsername(user.getUsername());
             existingUser.setEmail(user.getEmail());
             existingUser.setPassword(user.getPassword());
             existingUser.setNit(user.getNit());
-            existingUser.setPersonalImage(img);
             userService.saveUser(existingUser);
             res.put("message", "Usuario actualizado correctamente");
             return ResponseEntity.ok(res);
@@ -206,7 +186,6 @@ public class UserController {
                 res.put("message", "No se encontró el usuario con la identificación proporcionada");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
             }
-
             // Elimina el usuario
             userService.deleteUser(existingUser);
             res.put("message", "Usuario eliminado correctamente");

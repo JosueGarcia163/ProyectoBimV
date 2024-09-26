@@ -11,6 +11,7 @@ import com.losscrums.ProyectoHoteleria.DTO.ReservationResponseDTO;
 import com.losscrums.ProyectoHoteleria.DTO.ReservationSaveDTO;
 import com.losscrums.ProyectoHoteleria.DTO.UserClearDTO;
 import com.losscrums.ProyectoHoteleria.model.Reservation;
+import com.losscrums.ProyectoHoteleria.model.Room;
 import com.losscrums.ProyectoHoteleria.model.User;
 import com.losscrums.ProyectoHoteleria.repository.ReservationRepository;
 import com.losscrums.ProyectoHoteleria.service.IService.IReservationService;
@@ -23,6 +24,9 @@ public class ReservationService implements IReservationService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoomService roomService;
 
     @Override
     public List<ReservationResponseDTO> findAll() {
@@ -55,13 +59,16 @@ public class ReservationService implements IReservationService {
             //Buscamos una reservacion en base al id de user.
             User user = userService.findUserById(reservationDTO.getUserId());
 
+            Room room = roomService.findRoom(reservationDTO.getRoomId());
+
             Reservation reservation = new Reservation(
                     null,
                     startDate,
                     endDate,
                     reservationDTO.getCost(),
                     reservationDTO.getStatus(),
-                    user
+                    user,
+                    room
             );
             return reservationRepository.save(reservation);
         } catch (Exception err) {
@@ -78,6 +85,15 @@ public class ReservationService implements IReservationService {
     public List<ReservationResponseDTO> findByUser(long userId) {
         User user = userService.findUserById(userId);
         List<Reservation> reservations = reservationRepository.findByUser(user);
+        return reservations.stream()
+                .map(reservation -> responseDTO(reservation))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ReservationResponseDTO> findByRoom(long roomId) {
+        Room room = roomService.findRoom(roomId);
+        List<Reservation> reservations = reservationRepository.findByRoom(room);
         return reservations.stream()
                 .map(reservation -> responseDTO(reservation))
                 .collect(Collectors.toList());
@@ -101,9 +117,12 @@ public class ReservationService implements IReservationService {
             existingReservation.setCost(reservationDTO.getCost());
             existingReservation.setStatus(reservationDTO.getStatus());
 
-            // Buscar la reservation asociado y actualizar la reservation.
+            // Buscar la user asociado y actualizar la reservation.
             User user = userService.findUserById(reservationDTO.getUserId());
+            //Buscar room asociada al numero de reservacion para editar.
+            Room room = roomService.findRoom(reservationDTO.getRoomId());
             existingReservation.setUser(user);
+            existingReservation.setRoom(room);
 
             // Guardar el reservation actualizado
             return reservationRepository.save(existingReservation);
@@ -130,7 +149,8 @@ public class ReservationService implements IReservationService {
                 reservation.getEnd(),
                 reservation.getCost(),
                 reservation.getStatus(),
-                userDTO
+                userDTO,
+                reservation.getRoom()
         );
 
         return dto;

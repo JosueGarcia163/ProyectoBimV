@@ -27,5 +27,8 @@ public interface IReservationService {
     List<ReservationResponseDTO> findByUser(long userId);
 
     public Reservation editReservation(Long idReservation, ReservationSaveDTO reservationDTO);
+
+    // Method to find reservations by room
+    List<ReservationResponseDTO> findByRoom(long roomId);
 }
 
