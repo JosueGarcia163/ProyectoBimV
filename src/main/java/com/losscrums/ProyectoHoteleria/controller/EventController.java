@@ -35,7 +35,7 @@ public class EventController {
     EventService eventService;
 
     //Funcion para encontrar evento por Id hotel.
-    @GetMapping("/{hotelId}")
+    @GetMapping("/hotel/{hotelId}")
     public ResponseEntity<?> getEventforHotel(@PathVariable Long hotelId) {
         Map<String, Object> res = new HashMap<>();
         try {

@@ -68,7 +68,7 @@ VALUES
 
 INSERT INTO event (event_type, name, cost, date_start, date_finish, hotel_id_hotel)
 VALUES 
-('Party', 'party', 250.00, '2024-12-31 20:00:00', '2025-01-01 01:00:00', 4);
+('Party', '15 years', 258.00, '2024-12-31 20:00:00', '2025-01-01 01:00:00', 4);
 
 -- Insertar room 1.
 INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
@@ -94,16 +94,16 @@ INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id
 VALUES ('Suite', '2 personas', 'No Disponible', '2024-09-19', 5,1);
 
 INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
-VALUES ('Individual', '1 persona', 'Disponible', '2024-09-17', 3,3);
+VALUES ('Individual', '1 persona', 'No Disponible', '2024-09-17', 3,3);
 
 INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
-VALUES ('Individual', '1 persona', 'Disponible', '2024-09-17', 3,3);
+VALUES ('Grupal', '3 personas', 'Disponible', '2024-09-17', 3,3);
 
 INSERT INTO room (room_Type, capacity, availability, availability_date, hotel_id_hotel, event_id_event) 
-VALUES ('Individual', '1 persona', 'Disponible', '2024-09-17', 3,3);
+VALUES ('Grupal', '2 personas', 'No Disponible', '2024-09-17', 3,3);
 
 
--- Insertar reservacion.
+-- Insertar reservacion OneToOne.
 INSERT INTO reservation (start, end, cost, status, user_id_user, room_id_room)
 VALUES ('2024-10-01 14:00:00', '2024-10-01 16:00:00', '100.00', 'PROCESS', 5,1);
 

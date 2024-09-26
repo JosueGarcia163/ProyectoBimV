@@ -27,7 +27,6 @@ import com.losscrums.ProyectoHoteleria.model.Hotel;
 import com.losscrums.ProyectoHoteleria.model.Room;
 import com.losscrums.ProyectoHoteleria.service.EventService;
 import com.losscrums.ProyectoHoteleria.service.HotelService;
-import com.losscrums.ProyectoHoteleria.service.ReservationService;
 import com.losscrums.ProyectoHoteleria.service.RoomService;
 
 import jakarta.validation.Valid;
@@ -46,9 +45,6 @@ public class RoomController {
 
     @Autowired
     EventService eventService;
-
-    @Autowired
-    ReservationService reservationService;
 
     // Rutas especificas para cada fumcion del programa
 

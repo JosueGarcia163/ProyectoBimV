@@ -19,14 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.losscrums.ProyectoHoteleria.DTO.UserLoginDTO;
 import com.losscrums.ProyectoHoteleria.DTO.UserSaveDTO;
 import com.losscrums.ProyectoHoteleria.model.User;
-import com.losscrums.ProyectoHoteleria.service.CloudinaryService;
 import com.losscrums.ProyectoHoteleria.service.UserService;
 
 import jakarta.validation.Valid;
@@ -38,9 +35,6 @@ public class UserController {
 
     @Autowired
     UserService userService;
-
-    @Autowired
-    CloudinaryService cloudinaryService;
 
     @GetMapping("/list")
     public ResponseEntity<?> listUser(){
@@ -66,7 +60,6 @@ public class UserController {
 
     @PostMapping("/post")
     public ResponseEntity<?> addUser(
-        @RequestPart("personalImage") MultipartFile personalImage,
         @Valid @ModelAttribute UserSaveDTO user,
         BindingResult result
     ){
@@ -81,8 +74,6 @@ public class UserController {
             return ResponseEntity.badRequest().body(res);
         }
         try {
-            Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(personalImage, "profilePersonalImage");
-            String img = uploadResult.get("url").toString();
             Long idUser = null;
             User newUser = new User(
                 idUser,
@@ -91,8 +82,7 @@ public class UserController {
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
-                user.getNit(),
-                img
+                user.getNit()
             );
             userService.saveUser(newUser);
             res.put("message", "Usuario guardado correctamente");
@@ -104,7 +94,8 @@ public class UserController {
         }
     }
 
-    @PostMapping("/login")
+    //Creamos metodo para hacer el login.
+    @PostMapping("/login")          //Hacemos el login de tipo RequestBody para ingresar datos en formato JSON.
     public ResponseEntity<?> login(@RequestBody UserLoginDTO user){
         Map<String, Object> res = new HashMap<>();
         try {
@@ -122,11 +113,11 @@ public class UserController {
             return ResponseEntity.internalServerError().body(res);
         }
     }
-    
+
+    //Creamos metodo para editar.
     @PutMapping("put/{idUser}")
     public ResponseEntity<?> editUser(
         @PathVariable long idUser,
-        @RequestPart("personalImage") MultipartFile personalImage,
         @Valid @ModelAttribute UserSaveDTO user,
         BindingResult result
     ){
@@ -142,26 +133,21 @@ public class UserController {
         }
         
         try {
+            //Mas validaciones.
             User existingUser = userService.findUserById(idUser);
             if(existingUser == null){
                 res.put("message", "No se encontro el usuario con el ID proporcionado");
                 return ResponseEntity.internalServerError().body(res);
             }
 
-            String img;
-            if(!personalImage.isEmpty()){
-                Map<String, Object> uploadResult = cloudinaryService.uploadProfilePicture(personalImage, "profilePersonalImage");
-                img = uploadResult.get("url").toString();
-            } else{
-                img = existingUser.getPersonalImage();
-            }
+            //Modificamos los setters de user segun los nuevos datos que ingreso el usuario.
             existingUser.setName(user.getName());
             existingUser.setSurname(user.getSurname());
             existingUser.setUsername(user.getUsername());
             existingUser.setEmail(user.getEmail());
             existingUser.setPassword(user.getPassword());
             existingUser.setNit(user.getNit());
-            existingUser.setPersonalImage(img);
+            //Guardamos el usuario.
             userService.saveUser(existingUser);
             res.put("message", "Usuario actualizado correctamente");
             return ResponseEntity.ok(res);
