@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class HotelDTO {
+public class HotelSaveDTO {
 
     @NotBlank(message = "El nombre no puede ir vacio")
     // Nombre del hotel

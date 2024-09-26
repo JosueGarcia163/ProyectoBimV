@@ -37,7 +37,7 @@ public class ServiceController {
     ServicesService servicesService;
     
 
-    @GetMapping("/{eventId}")
+    @GetMapping("/event/{eventId}")
     public ResponseEntity<?> getServiceforEvent(@PathVariable Long eventId){
         Map<String, Object> res = new HashMap<>();
         try {

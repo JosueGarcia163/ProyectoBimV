@@ -17,7 +17,7 @@ public class Hotel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Identificador único para cada hotel
+    private Long idHotel; // Identificador único para cada hotel
 
     @NotBlank
     // Nombre del hotel
@@ -31,7 +31,7 @@ public class Hotel {
     // Nivel de confort del hotel
     private String comfort; 
 
-    //No es obligatoria
-    private String profilePicture;
+    private int numberRent;
+    
 }
 

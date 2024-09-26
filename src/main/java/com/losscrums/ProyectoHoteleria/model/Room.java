@@ -19,7 +19,7 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idRoom;
     @NotBlank
     private String roomType;
     @NotBlank
@@ -31,5 +31,9 @@ public class Room {
     @NotNull
     @ManyToOne
     private Hotel hotel;
+    @NotNull
+    //Esto nos permite tener muchas habitaciones en un mismo evento.
+    @ManyToOne
+    private Event event;
 
 }
